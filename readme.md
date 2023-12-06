@@ -1,14 +1,6 @@
-[![Build status](https://ci.appveyor.com/api/projects/status/wwokiviriq3m52t6?svg=true)](https://ci.appveyor.com/project/ThirteenAG/gtaiv-eflc-fusionfix)
-
 <p align="center">
   <img height="100" src="https://user-images.githubusercontent.com/4904157/63623173-921aaf00-c601-11e9-8b84-fc5803269323.png">
 </p>
-
-# GTAIV.EFLC.FusionFix
-
-This projects aims to fix some issues in Grand Theft Auto IV: Complete Edition.
-
-![](https://github.com/ThirteenAG/GTAIV.EFLC.FusionFix/assets/4904157/ba388163-c26a-41ae-8378-bef4037c4fd7)
 
 # This fork
 
@@ -17,6 +9,16 @@ The original repository blocks the capability of using the .asi on 1.0.8.0/1.0.7
 Keep in mind that you still want additional mods to be used for a pleasant GFWL multiplayer experience, including disabling the mod check to even allow this fork to work.
 
 You can visit the [Grand Theft Auto RevIVal Discord Server](https://discord.gg/gtrf) for more information about GFWL multiplayer and people to play with. You can also use [HappinessMP](https://happinessmp.net/) to play online on Complete Edition (doesn't allow any mods including FusionFix, however)
+
+## Installing this fork
+
+Install the [official release](https://github.com/ThirteenAG/GTAIV.EFLC.FusionFix/releases/latest) first, then this fork's [`.asi`](https://github.com/gillian-guide/GTAIV.EFLC.FusionFix-GFWL/releases/latest) (and `.ini` if you didn't already edit it).
+
+# GTAIV.EFLC.FusionFix
+
+This projects aims to fix some issues in Grand Theft Auto IV: Complete Edition.
+
+![](https://github.com/ThirteenAG/GTAIV.EFLC.FusionFix/assets/4904157/ba388163-c26a-41ae-8378-bef4037c4fd7)
 
 ## Installation:
 
