@@ -94,7 +94,7 @@ float TryMatchPedCamSensitivity()
     return ((GetMouseSensitivityForRI() / 20.0f) * 0.6f) + 0.2f;
 }
 
-injector::hook_back<void(__cdecl*)(int*, int*)> hbNATIVE_GET_MOUSE_INPUT;
+injector::hook_back<decltype(&Natives::GetMouseInput)> hbNATIVE_GET_MOUSE_INPUT;
 void __cdecl NATIVE_GET_MOUSE_INPUT(int* a1, int* a2)
 {
     static auto inv = FusionFixSettings.GetRef("PREF_INVERT_MOUSE");
@@ -311,11 +311,7 @@ public:
 
             // Script
             {
-                auto hash_GET_MOUSE_INPUT = std::to_underlying(Natives::NativeHashes::GET_MOUSE_INPUT);
-                pattern = hook::pattern(pattern_str(0x68, to_bytes(hash_GET_MOUSE_INPUT))); // push 0x...
-                auto addr = *pattern.get_first<uintptr_t>(-4);
-                auto range = hook::range_pattern(addr, addr + 30, "E8 ? ? ? ? 83 C4 08 C3");
-                hbNATIVE_GET_MOUSE_INPUT.fun = injector::MakeCALL(range.get_first(0), NATIVE_GET_MOUSE_INPUT, true).get();
+                hbNATIVE_GET_MOUSE_INPUT.fun = NativeOverride::Register(Natives::NativeHashes::GET_MOUSE_INPUT, NATIVE_GET_MOUSE_INPUT, "E8 ? ? ? ? 83 C4 08 C3", 30);
             }
         };
     }
