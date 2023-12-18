@@ -2,7 +2,13 @@
   <img height="100" src="https://user-images.githubusercontent.com/4904157/63623173-921aaf00-c601-11e9-8b84-fc5803269323.png">
 </p>
 
-# This fork
+## DISCLAIMER
+
+**THIS FORK HAS NO RELATION TO THE OFFICIAL REPOSITORY AND IF YOU HAVE ANY ISSUES SPECIFIC TO THIS FORK, DO NOT CREATE AN ISSUE ON THE OFFICIAL REPOSITORY NOR BOTHER FUSION TEAM WITH IT**
+
+**I'M ALSO NOT DOING ANY HEAVY WORK ON THIS FORK, NOR DO I KNOW HOW MODDING WORKS, NOR DO I KNOW HOW TO CODE WITH C++, NOR DO I KNOW HOW TO PORT MODS. DON'T ASK ME TO.**
+
+# GFWL Patch (this fork)
 
 The original repository blocks the capability of using the .asi on 1.0.8.0/1.0.7.0 with a non-`xlive.dll` file, in the end, not allowing to play GFWL with this mod enabled. This fork simply removes that check from the code and defaults `RecoilFix` to `0`. If any more issues occur with FusionFix and GFWL combo, I will attempt to edit them out.
 
@@ -10,7 +16,7 @@ Keep in mind that you still want additional mods to be used for a pleasant GFWL 
 
 You can visit the [Grand Theft Auto RevIVal Discord Server](https://discord.gg/gtrf) for more information about GFWL multiplayer and people to play with. You can also use [HappinessMP](https://happinessmp.net/) to play online on Complete Edition (doesn't allow any mods including FusionFix, however)
 
-## Installing this fork
+## Installing the GFWL patch
 
 Install the [official release](https://github.com/ThirteenAG/GTAIV.EFLC.FusionFix/releases/latest) first, then this fork's [`.asi`](https://github.com/gillian-guide/GTAIV.EFLC.FusionFix-GFWL/releases/latest) (and `.ini` if you didn't already edit it).
 
