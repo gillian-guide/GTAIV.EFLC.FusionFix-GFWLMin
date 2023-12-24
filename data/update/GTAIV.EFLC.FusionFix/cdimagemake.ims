@@ -9,7 +9,7 @@
 -close
 
 -create "IV\\!GTAIV.PhoneFix.img" "3" "IMG_VERSION_3_ENCRYPTION_TYPE_NONE"
--importFromDirectory "GTAIV.PhoneFix"
+-importFromDirectory "GTAIV.GFWLPatch"
 -rebuild
 -close
 
@@ -19,7 +19,7 @@
 -close
 
 -create "TLAD\\!TLAD.PhoneFix.img" "3" "IMG_VERSION_3_ENCRYPTION_TYPE_NONE"
--importFromDirectory "TLAD.PhoneFix"
+-importFromDirectory "TLAD.GFWLPatch"
 -rebuild
 -close
 
@@ -29,12 +29,7 @@
 -close
 
 -create "TBOGT\\!TBOGT.PhoneFix.img" "3" "IMG_VERSION_3_ENCRYPTION_TYPE_NONE"
--importFromDirectory "TBOGT.PhoneFix"
--rebuild
--close
-
--create "FusionTrees.img" "3" "IMG_VERSION_3_ENCRYPTION_TYPE_NONE"
--importFromDirectory "FusionTrees"
+-importFromDirectory "TBOGT.GFWLPatch"
 -rebuild
 -close
 
