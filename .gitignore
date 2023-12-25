@@ -340,3 +340,5 @@ data/update/common/shaders/preload.list
 data/update/pc/textures/stipple.wtd
 data/plugins/GTAIV.EFLC.FusionFix.asi
 GTAIV.EFLC.FusionFix.zip
+
+release/
