@@ -8,6 +8,8 @@ import common;
 import comvars;
 import settings;
 import natives;
+import shaders;
+import fusiondxhook;
 
 class Fixes
 {
@@ -297,7 +299,6 @@ public:
             {
                 auto pattern = find_pattern("3B 05 ? ? ? ? 74 6C 3B 05 ? ? ? ? 74 64 3B 05 ? ? ? ?", "3B 05 ? ? ? ? 74 6E 3B 05 ? ? ? ? 74 66 3B 05");
                 injector::MakeNOP(pattern.get_first(0), 16, true);
-                injector::MakeNOP(pattern.get_first(24), 8, true);
             }
 
             // Off Route infinite loading
@@ -305,6 +306,40 @@ public:
                 auto pattern = hook::pattern("68 ? ? ? ? FF B6 ? ? ? ? E8 ? ? ? ? 83 C4 08 84 C0 74 E2");
                 if (!pattern.empty())
                     injector::WriteMemory(pattern.get_first(1), 0xFFFFFFFF, true);
+            }
+
+            // Fix for light coronas being rendered through objects in water reflections.
+            {
+                static auto bCoronaShader = false;
+                static DWORD CoronaDepth = 0;
+                static IDirect3DVertexShader9* CoronaVertexShader = nullptr;
+                FusionFix::D3D9::onAfterCreateVertexShader() += [](LPDIRECT3DDEVICE9& pDevice, DWORD*& pFunction, IDirect3DVertexShader9**& ppShader)
+                {
+                    static constexpr auto CoronaVertexShaderID = 15;
+                    if (GetFusionShaderID(*ppShader) == CoronaVertexShaderID)
+                        CoronaVertexShader = *ppShader;
+                };
+
+                FusionFix::D3D9::onBeforeDrawPrimitive() += [](LPDIRECT3DDEVICE9& pDevice, D3DPRIMITIVETYPE& PrimitiveType, UINT& StartVertex, UINT& PrimitiveCount)
+                {
+                    IDirect3DVertexShader9* vShader = nullptr;
+                    pDevice->GetVertexShader(&vShader);
+                    if (vShader && CoronaVertexShader && vShader == CoronaVertexShader)
+                    {
+                        bCoronaShader = true;
+                        pDevice->GetRenderState(D3DRS_ZENABLE, &CoronaDepth);
+                        pDevice->SetRenderState(D3DRS_ZENABLE, 1);
+                    }
+                };
+
+                FusionFix::D3D9::onAfterDrawPrimitive() += [](LPDIRECT3DDEVICE9& pDevice, D3DPRIMITIVETYPE& PrimitiveType, UINT& StartVertex, UINT& PrimitiveCount)
+                {
+                    if (bCoronaShader)
+                    {
+                        pDevice->SetRenderState(D3DRS_ZENABLE, CoronaDepth);
+                        bCoronaShader = false;
+                    }
+                };
             }
         };
     }

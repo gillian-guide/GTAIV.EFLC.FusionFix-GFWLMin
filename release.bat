@@ -7,6 +7,7 @@ copy bin\GTAIV.EFLC.FusionFix.asi release\GTAIV.EFLC.FusionFix.asi
 copy data\plugins\GTAIV.EFLC.FusionFix.ini release\GTAIV.EFLC.FusionFix.ini
 
 call buildimg.bat
+call buildwtd.bat
 call buildshaders.bat
 
 xcopy /s /i data\update\ release\update /exclude:exclude.txt

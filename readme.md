@@ -1,5 +1,5 @@
 <p align="center">
-  <img height="100" src="https://user-images.githubusercontent.com/4904157/63623173-921aaf00-c601-11e9-8b84-fc5803269323.png">
+  <img height="200" src="https://github.com/ThirteenAG/GTAIV.EFLC.FusionFix/assets/4904157/f45efc2e-f4f5-4d4d-847b-0f0d19897ef4.png">
 </p>
 
 ## DISCLAIMER
@@ -39,14 +39,14 @@ I include the rest of the original repository for the purposes of compiling the 
 
 # GTAIV.EFLC.FusionFix
 
-This projects aims to fix some issues in Grand Theft Auto IV: Complete Edition.
+This projects aims to fix some issues in Grand Theft Auto IV: Complete Edition. Also available for [Max Payne 3](https://github.com/ThirteenAG/MaxPayne3.FusionFix#readme).
 
 ![](https://github.com/ThirteenAG/GTAIV.EFLC.FusionFix/assets/4904157/ba388163-c26a-41ae-8378-bef4037c4fd7)
 
 ## Installation:
 
 > [!NOTE]
-> Install Grand Theft Auto IV: Complete Edition (v1.2.0.30 and above required)
+> Install Grand Theft Auto IV: The Complete Edition (v1.2.0.30 and above required)
 >
 > **Download**: [GTAIV.EFLC.FusionFix.zip](https://github.com/ThirteenAG/GTAIV.EFLC.FusionFix/releases/latest/download/GTAIV.EFLC.FusionFix.zip)
 >
@@ -73,7 +73,8 @@ This projects aims to fix some issues in Grand Theft Auto IV: Complete Edition.
 - **Shadow Filter**, offering a variety of choices such as "Sharp", "Soft", "Softer", "Softest", and "PCSS"
 - **Console Shadows**, disables headlights shadows in exchange for vehicle shadows from non-sun light sources
 - **FPS Limit**, set a custom FPS limit, select from a list of predefined values, or turn it off
-- **FXAA**, toggle for antialiasing
+- **Antialiasing**, a toggle for FXAA or SMAA ([comparison](https://github.com/ThirteenAG/GTAIV.EFLC.FusionFix/assets/4904157/6104ec1f-9e5a-46c4-891a-6a5e37d85f86))
+- **SSAA**, a toggle to enable supersampling, requires restart, affects performance
 - **Console Gamma**, emulates consoles' contrasted look
 - **Screen Filter**, an option to change color filters in main game and episodes
 - **Distant Blur**, controls how intense the distant blur is during gameplay
@@ -205,6 +206,7 @@ This projects aims to fix some issues in Grand Theft Auto IV: Complete Edition.
 ### Reflections
 - Fixed excessive wetness/specularity of various surfaces
 - Fixed blocky vehicle reflections
+- Reduced corona reflection intensity
 - Fixed anisotropic filtering affecting reflection intensity
 - Removed influence of vehicle.ide on vehicle reflection intensity
 - Increased global reflection intensity to match consoles
