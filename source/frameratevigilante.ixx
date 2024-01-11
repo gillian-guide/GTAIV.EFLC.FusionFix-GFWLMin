@@ -51,7 +51,7 @@ public:
                 }; injector::MakeInline<FramerateVigilanteHook1>(pattern.get_first(0), pattern.get_first(6));
             }
 
-            pattern = hook::pattern("F3 0F 10 05 ? ? ? ? F3 0F 58 C1 F3 0F 11 05 ? ? ? ? EB 36");
+            /*pattern = hook::pattern("F3 0F 10 05 ? ? ? ? F3 0F 58 C1 F3 0F 11 05 ? ? ? ? EB 36");
             static auto f1032790 = *pattern.get_first<float*>(4);
             if (!pattern.empty())
             {
@@ -62,7 +62,7 @@ public:
                         regs.xmm0.f32[0] = (*f1032790) / 10.0f;
                     }
                 }; injector::MakeInline2<LoadingTextSpeed>(pattern.get_first(0), pattern.get_first(8));
-            }
+            }*/
 
             pattern = hook::pattern("F3 0F 59 05 ? ? ? ? F3 0F 59 05 ? ? ? ? F3 0F 59 05 ? ? ? ? F3 0F 58 05 ? ? ? ? F3 0F 11 05");
             if (!pattern.empty())
