@@ -32,17 +32,6 @@ jobs:
     - name: Add msbuild to PATH
       uses: microsoft/setup-msbuild@main
 
-<<<<<<< HEAD
-=======
-    - name: Auto Increment Version
-      uses: MCKanpolat/auto-semver-action@v2
-      id: versioning
-      with:
-        releaseType: ${{ env.VERINC }}
-        incrementPerCommit: false
-        github_token: ${{ secrets.GITHUB_TOKEN }}
-
->>>>>>> upstream/master
     - name: Configure build
       run: ./premake5 vs2022 --with-version=vs2022
 
