@@ -20,6 +20,7 @@ export uint32_t* rage__scrEngine__ms_dwNativeTableSize;
 export uint32_t** rage__scrEngine__ms_pNatives;
 export uintptr_t** rage__scrProgram__ms_pGlobals;
 export uint32_t* rage__scrProgram__ms_pGlobalsSize;
+export uint32_t* CCutscenes__m_dwCutsceneState;
 export void* (__stdcall* getNativeAddress)(uint32_t);
 export float* fTimeStep;
 export HWND gWnd;
@@ -100,8 +101,11 @@ public:
             pattern = find_pattern("F3 0F 10 05 ? ? ? ? F3 0F 59 05 ? ? ? ? 8B 43 20 53", "F3 0F 10 05 ? ? ? ? F3 0F 59 44 24 ? 83 C4 04 83 7C 24");
             fTimeStep = *pattern.get_first<float*>(4);
 
-            pattern = hook::pattern("BE ? ? ? ? 8D 44 24 0C");
+            pattern = hook::pattern("BE ? ? ? ? 8D 44 24 0C 50 8D 46 10 50");
             pCGameConfigReader__ms_imgFiles = *pattern.get_first<decltype(pCGameConfigReader__ms_imgFiles)>(1);
+
+            pattern = hook::pattern("A1 ? ? ? ? 83 F8 08 74 05");
+            CCutscenes__m_dwCutsceneState = *pattern.get_first<uint32_t*>(1);
         };
     }
 } Common;

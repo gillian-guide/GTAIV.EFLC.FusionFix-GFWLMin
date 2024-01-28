@@ -29,9 +29,9 @@ private:
         auto GetValue() { return value; }
         auto SetValue(auto v) { value = v; WriteToIni(); if (callback) callback(value); }
         auto ReadFromIni(auto& iniReader) { return iniReader.ReadInteger(iniSec, iniName, iniDefValInt); }
-        auto ReadFromIni() { CIniReader iniReader(cfgPath.wstring()); return ReadFromIni(iniReader); }
-        void WriteToIni(auto& iniWriter) { iniWriter.WriteInteger(iniSec, iniName, value); }
-        void WriteToIni() { CIniReader iniWriter(cfgPath.wstring()); iniWriter.WriteInteger(iniSec, iniName, value); }
+        auto ReadFromIni() { CIniReader iniReader(cfgPath); return ReadFromIni(iniReader); }
+        void WriteToIni(auto& iniWriter) { iniWriter.WriteInteger(iniSec, iniName, value, true); }
+        void WriteToIni() { CIniReader iniWriter(cfgPath); iniWriter.WriteInteger(iniSec, iniName, value, true); }
     };
 
     struct MenuPrefs
@@ -134,8 +134,9 @@ public:
         pattern = find_pattern("89 1C 95 ? ? ? ? E8 ? ? ? ? A1 ? ? ? ? 83 C4 04 8D 04 40", "89 1C 8D ? ? ? ? E8 ? ? ? ? A1 ? ? ? ? 8D 0C 40 8B 14 CD");
         mPrefs = *pattern.get_first<int32_t*>(3);
 
-        CIniReader iniReader(cfgPath.wstring());
+        CIniReader iniReader(cfgPath);
 
+        // VOLATILE! DO NOT CHANGE THE ORDER OF THESE! ONLY WORKS BY SOME MIRACLE.
         static CSetting arr[] = {
             { 0, "PREF_SKIP_INTRO",        "MAIN",       "SkipIntro",                       "",                           1, nullptr, 0, 1 },
             { 0, "PREF_SKIP_MENU",         "MAIN",       "SkipMenu",                        "",                           0, nullptr, 0, 1 },
@@ -144,11 +145,11 @@ public:
             { 0, "PREF_SSAA",              "MISC",       "SSAA",                            "",                           0, nullptr, 0, 1 },
             { 0, "PREF_CONSOLE_GAMMA",     "MISC",       "ConsoleGamma",                    "",                           0, nullptr, 0, 1 },
             { 0, "PREF_TIMECYC",           "MISC",       "ScreenFilter",                    "MENU_DISPLAY_TIMECYC",       5, nullptr, TimecycText.eMO_DEF, std::distance(std::begin(TimecycText.data), std::end(TimecycText.data)) - 1 },
-            { 0, "PREF_CUTSCENE_DOF",      "MISC",       "DepthOfField",                    "",                           1, nullptr, 0, 1 },
+  /*UNUSED*/{ 0, "PREF_CUTSCENE_DOF",      "MISC",       "DistantBlurUnused",               "",                           1, nullptr, 0, 1 },
             { 0, "PREF_CONSOLE_SHADOWS",   "SHADOWS",    "ConsoleShadows",                  "",                           1, nullptr, 0, 1 },
             { 0, "PREF_SHADOW_FILTER",     "SHADOWS",    "ShadowFilter",                    "MENU_DISPLAY_SHADOWFILTER",  3, nullptr, ShadowFilterText.eSharp, std::distance(std::begin(ShadowFilterText.data), std::end(ShadowFilterText.data)) - 1 },
             { 0, "PREF_TREE_LIGHTING",     "MISC",       "TreeLighting",                    "MENU_DISPLAY_TREE_LIGHTING", 8, nullptr, TreeFxText.ePC, std::distance(std::begin(TreeFxText.data), std::end(TreeFxText.data)) - 1 },
-            { 0, "PREF_TCYC_DOF",          "MISC",       "DistantBlur",                     "MENU_DISPLAY_DOF",           7, nullptr, DofText.eOff, std::distance(std::begin(DofText.data), std::end(DofText.data)) - 1 },
+            { 0, "PREF_TCYC_DOF",          "MISC",       "DepthOfField",                    "MENU_DISPLAY_DOF",           7, nullptr, DofText.eOff, std::distance(std::begin(DofText.data), std::end(DofText.data)) - 1 },
             { 0, "PREF_MOTIONBLUR",        "MAIN",       "MotionBlur",                      "",                           0, nullptr, 0, 1 },
             { 0, "PREF_LEDILLUMINATION",   "MISC",       "LightSyncRGB",                    "",                           0, nullptr, 0, 1 },
             { 0, "PREF_DEFINITION",        "MAIN",       "Definition",                      "MENU_DISPLAY_DEFINITION",    6, nullptr, DefinitionText.eClassic, std::distance(std::begin(DefinitionText.data), std::end(DefinitionText.data)) - 1 },
@@ -164,7 +165,7 @@ public:
             { 0, "PREF_BUTTONS",           "MISC",       "Buttons",                         "MENU_DISPLAY_BUTTONS",       6, nullptr, ButtonsText.eXbox360, std::distance(std::begin(ButtonsText.data), std::end(ButtonsText.data)) - 1 },
             { 0, "PREF_LETTERBOX",         "MISC",       "Letterbox",                       "",                           1, nullptr, 0, 1 },
             { 0, "PREF_PILLARBOX",         "MISC",       "Pillarbox",                       "",                           1, nullptr, 0, 1 },
-            { 0, "PREF_ANTIALIASING",      "MISC",       "Antialiasing",                    "MENU_DISPLAY_ANTIALIASING",  5, nullptr, AntialiasingText.eMO_OFF, std::distance(std::begin(AntialiasingText.data), std::end(AntialiasingText.data)) - 1 },
+            { 0, "PREF_ANTIALIASING",      "MISC",       "Antialiasing",                    "MENU_DISPLAY_ANTIALIASING",  1, nullptr, AntialiasingText.eMO_OFF, std::distance(std::begin(AntialiasingText.data), std::end(AntialiasingText.data)) - 1 },
         };
 
         auto i = firstCustomID;
@@ -351,9 +352,9 @@ public:
     struct
     {
         enum eDofText {
-            eAuto, e43, e54, e159, e169, eOff, eLow, eMedium, eHigh, eVeryHigh
+            eAuto, e43, e54, e159, e169, eOff, eCutscenesOnly, eLow, eMedium, eHigh, eVeryHigh
         };
-        std::vector<const char*> data = { "Auto", "4:3", "5:4", "15:9", "16:9", "Off", "Low", "Medium", "High", "Very High" };
+        std::vector<const char*> data = { "Auto", "4:3", "5:4", "15:9", "16:9", "Off", "Cutscenes Only", "Low", "Medium", "High", "Very High"};
     } DofText;
 
     struct
