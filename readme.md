@@ -53,11 +53,9 @@ If using ZolikaPatch, also disable following options in `ZolikaPatch.ini`:
 - EmissiveLerpFix
 - BikePhoneAnimsFix
 - BorderlessWindowed
-- CutsceneFixes
 - HighFPSBikePhysicsFix
 - HighFPSSpeedupFix
 - ReversingLightFix
-- OutOfCommissionFix
 - SkipIntro
 - SkipMenu
 
