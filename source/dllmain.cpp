@@ -2,7 +2,6 @@
 
 import common;
 import comvars;
-import dllblacklist;
 
 injector::hook_back<void(__fastcall*)(void*, void*, int, int, int)> hbsub_92E7C0;
 void __fastcall sub_92E7C0Hook(void* _this, void* edx, int a2, int a3, int a4)
@@ -150,7 +149,6 @@ extern "C"
     {
         std::call_once(CallbackHandler::flag, []()
         {
-            CompatibilityWarnings();
             CallbackHandler::RegisterCallback(Init, hook::pattern("F3 0F 10 44 24 ? F3 0F 59 05 ? ? ? ? EB ? E8"));
         });
     }

@@ -151,12 +151,9 @@ public:
             { 0, "PREF_TREE_LIGHTING",     "MISC",       "TreeLighting",                    "MENU_DISPLAY_TREE_LIGHTING", 8, nullptr, TreeFxText.ePC, std::distance(std::begin(TreeFxText.data), std::end(TreeFxText.data)) - 1 },
             { 0, "PREF_TCYC_DOF",          "MISC",       "DepthOfField",                    "MENU_DISPLAY_DOF",           7, nullptr, DofText.eOff, std::distance(std::begin(DofText.data), std::end(DofText.data)) - 1 },
             { 0, "PREF_MOTIONBLUR",        "MAIN",       "MotionBlur",                      "",                           0, nullptr, 0, 1 },
-            { 0, "PREF_LEDILLUMINATION",   "MISC",       "LightSyncRGB",                    "",                           0, nullptr, 0, 1 },
             { 0, "PREF_DEFINITION",        "MAIN",       "Definition",                      "MENU_DISPLAY_DEFINITION",    6, nullptr, DefinitionText.eClassic, std::distance(std::begin(DefinitionText.data), std::end(DefinitionText.data)) - 1 },
             { 0, "PREF_BLOOM",             "MAIN",       "Bloom",                           "",                           1, nullptr, 0, 1 },
-            { 0, "PREF_FPSCOUNTER",        "FRAMELIMIT", "DisplayFpsCounter",               "",                           0, nullptr, 0, 1 },
             { 0, "PREF_ALWAYSRUN",         "MISC",       "AlwaysRun",                       "",                           0, nullptr, 0, 1 },
-            { 0, "PREF_ALTDIALOGUE",       "MISC",       "AltDialogue",                     "",                           0, nullptr, 0, 1 },
             { 0, "PREF_COVERCENTERING",    "MISC",       "CameraCenteringInCover",          "",                           0, nullptr, 0, 1 },
             { 0, "PREF_KBCAMCENTERDELAY",  "MISC",       "DelayBeforeCenteringCameraKB",    "",                           0, nullptr, 0, 9 },
             { 0, "PREF_PADCAMCENTERDELAY", "MISC",       "DelayBeforeCenteringCameraPad",   "",                           0, nullptr, 0, 9 },
@@ -543,122 +540,5 @@ public:
             pattern = find_pattern("8D 46 F0 66 0F 6E C0", "83 C7 F0 89 7C");
             injector::WriteMemory<uint8_t>(pattern.get_first(2), 0xE0, true);
         };
-
-        // FPS Counter
-        auto pattern = find_pattern("A1 ? ? ? ? 83 F8 08 74 17", "A1 ? ? ? ? 83 F8 08 74 0C");
-        if (!pattern.empty())
-        {
-            static auto& menuTab = **pattern.get_first<int32_t*>(1);
-            static ID3DXFont* pFPSFont = nullptr;
-
-            FusionFix::D3D9::onBeforeCreateDevice() += [](LPDIRECT3D9& pDirect3D9, UINT& Adapter, D3DDEVTYPE& DeviceType, HWND& hFocusWindow, DWORD& BehaviorFlags, D3DPRESENT_PARAMETERS*& pPresentationParameters, IDirect3DDevice9**& ppReturnedDeviceInterface)
-            {
-                if (pFPSFont)
-                    pFPSFont->Release();
-                pFPSFont = nullptr;
-            };
-
-            FusionFix::onBeforeReset() += []()
-            {
-                if (pFPSFont)
-                    pFPSFont->Release();
-                pFPSFont = nullptr;
-            };
-
-            FusionFix::D3D9::onEndScene() += [](LPDIRECT3DDEVICE9 pDevice)
-            {
-                if (!bMainEndScene)
-                    return;
-                else
-                    bMainEndScene = false;
-
-                static auto fpsc = FusionFixSettings.GetRef("PREF_FPSCOUNTER");
-                if (menuTab == 8 || menuTab == 49 || fpsc->get())
-                {
-                    static std::list<int> m_times;
-
-                    LARGE_INTEGER frequency;
-                    LARGE_INTEGER time;
-                    QueryPerformanceFrequency(&frequency);
-                    QueryPerformanceCounter(&time);
-
-                    if (m_times.size() == 50)
-                        m_times.pop_front();
-                    m_times.push_back(static_cast<int>(time.QuadPart));
-
-                    uint32_t fps = 0;
-                    if (m_times.size() >= 2)
-                        fps = static_cast<uint32_t>(0.5f + (static_cast<double>(m_times.size() - 1) * static_cast<double>(frequency.QuadPart)) / static_cast<double>(m_times.back() - m_times.front()));
-
-                    if (!pFPSFont)
-                    {
-                        D3DDEVICE_CREATION_PARAMETERS cparams;
-                        RECT rect;
-                        pDevice->GetCreationParameters(&cparams);
-                        GetClientRect(cparams.hFocusWindow, &rect);
-
-                        D3DXFONT_DESC fps_font;
-                        ZeroMemory(&fps_font, sizeof(D3DXFONT_DESC));
-                        fps_font.Height = rect.bottom / 20;
-                        fps_font.Width = 0;
-                        fps_font.Weight = 400;
-                        fps_font.MipLevels = 0;
-                        fps_font.Italic = 0;
-                        fps_font.CharSet = DEFAULT_CHARSET;
-                        fps_font.OutputPrecision = OUT_DEFAULT_PRECIS;
-                        fps_font.Quality = ANTIALIASED_QUALITY;
-                        fps_font.PitchAndFamily = DEFAULT_PITCH | FF_DONTCARE;
-                        wchar_t FaceName[] = L"Arial";
-                        memcpy(&fps_font.FaceName, &FaceName, sizeof(FaceName));
-
-                        if (D3DXCreateFontIndirect(pDevice, &fps_font, &pFPSFont) != D3D_OK)
-                            return;
-                    }
-                    else
-                    {
-                        auto DrawTextOutline = [](ID3DXFont* pFont, FLOAT X, FLOAT Y, D3DXCOLOR dColor, CONST PCHAR cString, ...)
-                        {
-                            const D3DXCOLOR BLACK(D3DCOLOR_XRGB(0, 0, 0));
-                            CHAR cBuffer[101] = "";
-
-                            va_list oArgs;
-                            va_start(oArgs, cString);
-                            _vsnprintf((cBuffer + strlen(cBuffer)), (sizeof(cBuffer) - strlen(cBuffer)), cString, oArgs);
-                            va_end(oArgs);
-
-                            RECT Rect[5] =
-                            {
-                                { LONG(X - 1), LONG(Y), LONG(X + 500.0f), LONG(Y + 50.0f) },
-                                { LONG(X), LONG(Y - 1), LONG(X + 500.0f), LONG(Y + 50.0f) },
-                                { LONG(X + 1), LONG(Y), LONG(X + 500.0f), LONG(Y + 50.0f) },
-                                { LONG(X), LONG(Y + 1), LONG(X + 500.0f), LONG(Y + 50.0f) },
-                                { LONG(X), LONG(Y), LONG(X + 500.0f), LONG(Y + 50.0f)},
-                            };
-
-                            if (dColor != BLACK)
-                            {
-                                for (auto i = 0; i < 4; i++)
-                                    pFont->DrawTextA(NULL, cBuffer, -1, &Rect[i], DT_NOCLIP, BLACK);
-                            }
-
-                            pFont->DrawTextA(NULL, cBuffer, -1, &Rect[4], DT_NOCLIP, dColor);
-                        };
-                        auto curEp = _dwCurrentEpisode ? *_dwCurrentEpisode : 0;
-                        static char str_format_fps[] = "%02d";
-                        static const D3DXCOLOR TBOGT(D3DCOLOR_XRGB(0xD7, 0x11, 0x6E));
-                        static const D3DXCOLOR TLAD(D3DCOLOR_XRGB(0x6F, 0x0D, 0x0F));
-                        static const D3DXCOLOR IV(D3DCOLOR_XRGB(0xF0, 0xA0, 0x00));
-                        DrawTextOutline(pFPSFont, 10, 10, (curEp == 2) ? TBOGT : ((curEp == 1) ? TLAD : IV), str_format_fps, fps);
-                    }
-                }
-            };
-
-            FusionFix::onShutdownEvent() += []()
-            {
-                if (pFPSFont)
-                    pFPSFont->Release();
-                pFPSFont = nullptr;
-            };
-        }
     }
 } Settings;
