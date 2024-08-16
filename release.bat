@@ -1,16 +1,14 @@
-copy bin\GTAIV.EFLC.FusionFix.asi data\plugins\GTAIV.EFLC.FusionFix.asi
+del release
+mkdir release
+mkdir release\update\GTAIV.EFLC.FusionFix\IV
+mkdir release\update\GTAIV.EFLC.FusionFix\TLAD
+mkdir release\update\GTAIV.EFLC.FusionFix\TBoGT
+copy bin\GTAIV.EFLC.FusionFix.asi release\GTAIV.EFLC.FusionFix.asi
+copy data\plugins\GTAIV.EFLC.FusionFix.ini release\GTAIV.EFLC.FusionFix.ini
 
 call buildimg.bat
 call buildwtd.bat
 call buildshaders.bat
 call buildgxt.bat
 
-7z a "GTAIV.EFLC.FusionFix.zip" ".\data\*" ^
--x!update\GTAIV.EFLC.FusionFix\GTAIV.EFLC.FusionFix ^
--x!update\GTAIV.EFLC.FusionFix\GTAIV.FusionFix ^
--x!update\GTAIV.EFLC.FusionFix\TLAD.FusionFix ^
--x!update\GTAIV.EFLC.FusionFix\TBOGT.FusionFix ^
--x!update\GTAIV.EFLC.FusionFix\FusionTrees ^
--x!update\GTAIV.EFLC.FusionFix\FusionLights ^
--x!update\GTAIV.EFLC.FusionFix\cdimagemake.ims ^
--xr!*\.gitkeep
+xcopy /s /i data\update\ release\update /exclude:exclude.txt

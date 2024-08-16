@@ -1,19 +1,34 @@
--create "GTAIV.EFLC.FusionFix.img" "3" "IMG_VERSION_3_ENCRYPTION_TYPE_NONE"
+-create "..\\..\\..\\release\\update\\GTAIV.EFLC.FusionFix\\GTAIV.EFLC.FusionFix.img" "3" "IMG_VERSION_3_ENCRYPTION_TYPE_NONE"
 -importFromDirectory "GTAIV.EFLC.FusionFix"
 -rebuild
 -close
 
--create "IV\\GTAIV.FusionFix.img" "3" "IMG_VERSION_3_ENCRYPTION_TYPE_NONE"
+-create "..\\..\\..\\release\\update\\GTAIV.EFLC.FusionFix\\IV\\GTAIV.FusionFix.img" "3" "IMG_VERSION_3_ENCRYPTION_TYPE_NONE"
 -importFromDirectory "GTAIV.FusionFix"
 -rebuild
 -close
 
--create "TLAD\\TLAD.FusionFix.img" "3" "IMG_VERSION_3_ENCRYPTION_TYPE_NONE"
+-create "..\\..\\..\\release\\update\\GTAIV.EFLC.FusionFix\\IV\\!GTAIV.GFWLPatch.img" "3" "IMG_VERSION_3_ENCRYPTION_TYPE_NONE"
+-importFromDirectory "GTAIV.GFWLPatch"
+-rebuild
+-close
+
+-create "..\\..\\..\\release\\update\\GTAIV.EFLC.FusionFix\\TLAD\\TLAD.FusionFix.img" "3" "IMG_VERSION_3_ENCRYPTION_TYPE_NONE"
 -importFromDirectory "TLAD.FusionFix"
 -rebuild
 -close
 
--create "TBOGT\\TBOGT.FusionFix.img" "3" "IMG_VERSION_3_ENCRYPTION_TYPE_NONE"
+-create "..\\..\\..\\release\\update\\GTAIV.EFLC.FusionFix\\TLAD\\!TLAD.GFWLPatch.img" "3" "IMG_VERSION_3_ENCRYPTION_TYPE_NONE"
+-importFromDirectory "TLAD.GFWLPatch"
+-rebuild
+-close
+
+-create "..\\..\\..\\release\\update\\GTAIV.EFLC.FusionFix\\TBOGT\\TBOGT.FusionFix.img" "3" "IMG_VERSION_3_ENCRYPTION_TYPE_NONE"
 -importFromDirectory "TBOGT.FusionFix"
+-rebuild
+-close
+
+-create "..\\..\\..\\release\\update\\GTAIV.EFLC.FusionFix\\TBOGT\\!TBOGT.GFWLPatch.img" "3" "IMG_VERSION_3_ENCRYPTION_TYPE_NONE"
+-importFromDirectory "TBOGT.GFWLPatch"
 -rebuild
 -close

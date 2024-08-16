@@ -1,13 +1,83 @@
-[![Actions Status: Release](https://github.com/ThirteenAG/GTAIV.EFLC.FusionFix/actions/workflows/msvc_x86.yml/badge.svg)](https://github.com/ThirteenAG/GTAIV.EFLC.FusionFix/actions)
-[![AppVeyor](https://img.shields.io/appveyor/build/ThirteenAG/GTAIV-EFLC-FusionFix?label=AppVeyor%20Build&logo=Appveyor&logoColor=white)](https://ci.appveyor.com/project/ThirteenAG/gtaiv-eflc-fusionfix)
-
 <p align="center">
   <img width="400" src="https://github.com/ThirteenAG/GTAIV.EFLC.FusionFix/assets/4904157/f45efc2e-f4f5-4d4d-847b-0f0d19897ef4.png">
 </p>
 
+## DISCLAIMER
+
+**THIS FORK HAS NO RELATION TO THE OFFICIAL REPOSITORY AND IF YOU HAVE ANY ISSUES SPECIFIC TO THIS FORK, DO NOT CREATE AN ISSUE ON THE OFFICIAL REPOSITORY NOR BOTHER FUSION TEAM WITH IT**
+
+**I'M ALSO NOT DOING ANY HEAVY WORK ON THIS FORK, NOR DO I KNOW HOW MODDING WORKS, NOR DO I KNOW HOW TO CODE WITH C++, NOR DO I KNOW HOW DOES ASM WORK, NOR DO I KNOW HOW TO PORT MODS. DON'T ASK ME TO.**
+
+# GFWL Patch (this fork)
+
+**Just because it says GFWL Patch doesn't mean you can't use this with xliveless.*
+
+**Some features made after v2.4.2 lack an implementation for nonCE, so in some ways, the experience is subpar to CE.*
+
+The original repository has no support for GFWL (it does have support for outdated patches themselves, however - props to Fusion Team for keeping new features in-tact for old versions). This fork attempts to mitigate that with several simple fixes:
+
+- Disable the `xlive.dll` check to remove the warning message about requiring `xlive.dll` and XLiveLessAddon.
+- Block `IVMenuAPI.asi` and `GTAIVExtraOptions.asi` due to breaking compatibility with FusionFix.
+- Fix the missing `Multiplayer` button on the phone by changing a simple check in the `spcellphonemain.sco` and `spcellphonenetwork.sco`. Thanks to [ClaudeIII](https://github.com/ClaudeIII) for helping with the ASM part of the code.
+- Fix the Multiplayer Tutorial. Editing the `spcellphonetutorial.sco` and `multitutorial.sco` made the multiplayer tutorial somewhat functional. Thanks to [sTc2201](https://github.com/sTc2201) for providing the `multitutorial.sco` fixes.
+- Fix crash on viewing leaderboard. Thanks to [sTc2201](https://github.com/sTc2201) for providing the fix.
+- Change the default option of `SkipMenu` to 0 to be able to load into DLC's first.
+- Change the default option of `RecoilFix` to 0 to avoid being as disadvantage to other players in the multiplayer.
+
+Keep in mind that you still want additional mods to be used for a pleasant GFWL multiplayer experience, including disabling the mod check to even allow this fork to work.
+
+You can visit the [Grand Theft Auto RevIVal Discord Server](https://discord.gg/gtrf) for more information about GFWL multiplayer and people to play with (this patch was also made for these guys). You can also use [HappinessMP](https://happinessmp.net/) to play online on Complete Edition (doesn't allow any mods including FusionFix, however).
+
+## Installing the GFWL Patch
+
+Install the [official release](https://github.com/ThirteenAG/GTAIV.EFLC.FusionFix/releases/latest) first, move the files out of the `plugins` folder into the root one, then apply [this patch](https://github.com/gillian-guide/GTAIV.EFLC.FusionFix-GFWL/releases/latest) on top of it.
+
+If using ZolikaPatch, also disable following options in `ZolikaPatch.ini` or use the [Setup Utility](https://github.com/gillian-guide/GTAIVSetupUtilityWPF):
+
+- BikePhoneAnimsFix
+- BorderlessWindowed
+- BuildingAlphaFix
+- BuildingDynamicShadows
+- CarDynamicShadowFix
+- CarPartsShadowFix
+- CutsceneFixes
+- DoNotPauseOnMinimize
+- DualVehicleHeadlights
+- EmissiveLerpFix
+- EpisodicVehicleSupport
+- EpisodicWeaponSupport
+- ForceCarHeadlightShadows
+- ForceDynamicShadowsEverywhere
+- ForceShadowsOnObjects
+- HighFPSBikePhysicsFix
+- HighFPSSpeedupFix
+- HighQualityReflections
+- ImprovedShaderStreaming
+- MouseFix
+- NewMemorySystem
+- NoLiveryLimit
+- OutOfCommissionFix
+- PoliceEpisodicWeaponSupport
+- RemoveBoundingBoxCulling
+- ReversingLightFix
+- SkipIntro
+- SkipMenu
+
+## Compiling FusionFix + GFWL Patch manually
+
+[![Actions Status: Release](https://github.com/gillian-guide/GTAIV.EFLC.FusionFix-GFWL/actions/workflows/msvc_x86.yml/badge.svg)](https://github.com/gillian-guide/GTAIV.EFLC.FusionFix-GFWL/actions)
+
+I include the rest of the original repository for the purposes of compiling the mod manually (including the patch) if you wish to do so.
+
+1. Clone this fork recursively (`git clone https://github.com/gillian-guide/GTAIV.EFLC.FusionFix-GFWL.git --recursive`).
+2. Open `premake5.bat` to generate a compileable Visual Studio project.
+3. Compile the project in `build` with whatever tools you prefer - MSBuild, Visual Studio etc.
+4. Launch `release.bat` and wait for it to finish.
+5. The complete thing *should* be in the `release` folder.
+
 # GTAIV.EFLC.FusionFix
 
-This projects aims to fix some issues in Grand Theft Auto IV: The Complete Edition.
+This projects aims to fix some issues in Grand Theft Auto IV: Complete Edition.
 
 Also available for [Max Payne 3](https://github.com/ThirteenAG/MaxPayne3.FusionFix#readme) and [other games](https://thirteenag.github.io/wfp).
 
