@@ -8,7 +8,25 @@
 
 **I'M ALSO NOT DOING ANY HEAVY WORK ON THIS FORK, NOR DO I KNOW HOW MODDING WORKS, NOR DO I KNOW HOW TO CODE WITH C++, NOR DO I KNOW HOW DOES ASM WORK, NOR DO I KNOW HOW TO PORT MODS. DON'T ASK ME TO.**
 
-# GFWL Patch (this fork)
+# GFWL-Min Patch (this fork)
+**Do not use this fork for singleplayer, please.**
+
+This repository does additional changes to potentially improve compatibility with multiplayer by removing features that would only be useful in singleplayer. 
+
+Following features were removed:
+
+- Recoil fix.
+- **All** cutscene and mission fixes.
+- Loading text speed fix.
+- Alternative dialogues.
+- Ped Death Animation Fix from TBoGT.
+- Logitech RGB support.
+- DLL blacklist.
+- Mod updater.
+- Several ultrawide fixes, including pillarbox and letterbox.
+- And more I can't remember.
+
+# GFWL Patch (the fork this fork is based off)
 
 **Just because it says GFWL Patch doesn't mean you can't use this with xliveless.*
 
