@@ -372,10 +372,6 @@ public:
                     injector::WriteMemory(pattern.count(2).get(0).get<void*>(8), 0x200, true);
                 }
 
-                // Remove code that doubled shadow cascade resolution.
-                pattern = find_pattern("03 F6 E8 ? ? ? ? 8B 0D ? ? ? ? 8D 54 24 0C", "03 F6 E8 ? ? ? ? 8B 0D ? ? ? ? 8D 44 24 0C");
-                injector::MakeNOP(pattern.get_first(0), 2, true);
-
                 // Force water surface rendertarget resolution to always be 256x256. This matches the water tiling on the console version.
                 static uint32_t dwWaterQuality = 1;
                 pattern = find_pattern("8B 0D ? ? ? ? 53 BB ? ? ? ? D3 E3 85 D2 0F 85", "8B 0D ? ? ? ? BF ? ? ? ? D3 E7 85 C0 0F 85");
@@ -390,12 +386,41 @@ public:
 
                 // Switch texture formats
                 // CASCADE_ATLAS
+                constexpr auto NewCascadeAtlasFormat = D3DFMT_R32F;
+
                 pattern = find_pattern("C7 05 ? ? ? ? ? ? ? ? C7 05 ? ? ? ? ? ? ? ? 8B 08 50 FF 51 08 5E 59 C3 8B 44 24 04 6A 72", "C7 05 ? ? ? ? ? ? ? ? C7 05 ? ? ? ? ? ? ? ? 8B 08");
-                injector::WriteMemory(pattern.get_first(6), rage::getEngineTextureFormat(D3DFMT_R32F), true);
+                injector::WriteMemory(pattern.get_first(6), rage::getEngineTextureFormat(NewCascadeAtlasFormat), true);
 
                 // _DEFERRED_GBUFFER_0_ / _DEFERRED_GBUFFER_1_ / _DEFERRED_GBUFFER_2_
                 pattern = find_pattern("BA ? ? ? ? 84 C0 0F 45 CA 8B 15", "40 05 00 00 00 8B 0D ? ? ? ? 8B 11 8B 52 38 8D 74 24 14 56 50 A1");
                 injector::WriteMemory(pattern.get_first(1), rage::getEngineTextureFormat(D3DFMT_A8R8G8B8), true);
+
+                if (bHighResolutionShadows)
+                {
+                    auto pattern = find_pattern("8D 7D 40 8B 01 57 FF 75 10 FF 75 24 FF 75 0C FF 75 20 FF 75 18");
+                    if (!pattern.empty())
+                    {
+                        static auto FixCascadedShadowMapResolution = safetyhook::create_mid(pattern.get_first(0), [](SafetyHookContext& regs)
+                        {
+                            auto& Width = *(uint32_t*)(regs.ebp + 0x14);
+                            auto& Height = *(uint32_t*)(regs.ebp + 0x18);
+                            auto& Levels = *(uint32_t*)(regs.ebp + 0x20);
+                            auto& Format = *(uint32_t*)(regs.ebp + 0x24);
+
+                            if (D3DFORMAT(Format) == NewCascadeAtlasFormat && Height >= 256 && Width == Height * 4 && Levels == 1)
+                            {
+                                Width *= 2;
+                                Height *= 2;
+                            }
+                        });
+                    }
+                }
+                else
+                {
+                    // Remove code that doubled shadow cascade resolution.
+                    pattern = find_pattern("03 F6 E8 ? ? ? ? 8B 0D ? ? ? ? 8D 54 24 0C", "03 F6 E8 ? ? ? ? 8B 0D ? ? ? ? 8D 44 24 0C");
+                    injector::MakeNOP(pattern.get_first(0), 2, true);
+                }
             }
 
             // P90 Selector Fix (Prev Weapon key)
