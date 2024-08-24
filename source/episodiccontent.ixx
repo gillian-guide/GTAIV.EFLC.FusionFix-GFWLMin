@@ -301,6 +301,34 @@ public:
                     injector::MakeNOP(pattern.get_first(7), 2, true);
                 }
 
+                pattern = hook::pattern("83 3D ? ? ? ? ? 75 26 8B 4C 24 04"); // Sticky bomb something?
+                if (!pattern.empty())
+                    injector::MakeNOP(pattern.get_first(7), 2, true);
+                else {
+                    pattern = hook::pattern("83 3D ? ? ? ? ? 75 29 8B 44 24 04");
+                    injector::MakeNOP(pattern.get_first(7), 2, true);
+                }
+
+                pattern = hook::pattern("83 3D ? ? ? ? ? 89 44 24 1C"); // Sticky bomb ???
+                if (!pattern.empty())
+                    injector::MakeNOP(pattern.get_first(15), 2, true);
+                else {
+                    pattern = hook::pattern("83 3D ? ? ? ? ? 88 44 24 1C");
+                    injector::MakeNOP(pattern.get_first(11), 2, true);
+                }
+
+                pattern = hook::pattern("83 3D ? ? ? ? ? 75 1F 8B 44 24 0C"); // CTaskSimplePlayerAimProjectile::process
+                if (!pattern.empty())
+                    injector::MakeNOP(pattern.get_first(7), 2, true);
+                else {
+                    pattern = hook::pattern("83 3D ? ? ? ? ? 75 1C 8B 47 18");
+                    injector::MakeNOP(pattern.get_first(7), 2, true);
+                }
+
+                pattern = hook::pattern("83 3D ? ? ? ? ? 75 07 68 ? ? ? ? EB 05 68 ? ? ? ? E8"); // E2 Bullet traces
+                if (!pattern.empty())
+                    injector::MakeNOP(pattern.get_first(7), 2, true);
+
                 pattern = hook::pattern("83 3D ? ? ? ? ? 75 2D 83 7E 14 19"); // Grenade launcher explode on impact from E2
                 if (!pattern.empty())
                     injector::MakeNOP(pattern.get_first(7), 2, true);
@@ -332,6 +360,10 @@ public:
                     pattern = hook::pattern("83 3D ? ? ? ? ? 0F 85 ? ? ? ? 84 C0");
                     injector::MakeNOP(pattern.get_first(7), 6, true);
                 }
+
+                pattern = hook::pattern("83 3D ? ? ? ? ? 75 22 83 F8 02"); // weap checks? nearby explosive weapon checks
+                if (!pattern.empty())
+                    injector::MakeNOP(pattern.get_first(7), 2, true);
 
                 pattern = hook::pattern("83 3D ? ? ? ? ? 0F 8C ? ? ? ? 83 7F 54 20"); // P90 scroll block
                 if (!pattern.empty())
@@ -387,7 +419,7 @@ public:
                     else {
                         pattern = hook::pattern("83 3D ? ? ? ? ? 75 0D 80 7E 7D 00");
                         injector::MakeNOP(pattern.get_first(7), 2, true);
-                    }
+                }
 
                 pattern = hook::pattern("83 3D ? ? ? ? ? 5D 75 1E"); // Give parachute during load save
                     if (!pattern.empty())
@@ -395,7 +427,7 @@ public:
                     else {
                         pattern = hook::pattern("83 3D ? ? ? ? ? 75 1E E8");
                         injector::MakeNOP(pattern.get_first(7), 2, true);
-                    }
+                }
 
                 pattern = hook::pattern("83 3D ? ? ? ? ? 53 57 8B 7C 24 20"); // TBoGT counter anims fix
                     if (!pattern.empty())
@@ -403,7 +435,7 @@ public:
                     else {
                         pattern = hook::pattern("83 3D ? ? ? ? ? 53 55 8B 6C 24 20");
                         injector::MakeNOP(pattern.get_first(21), 2, true);
-                    }
+                }
 
                 pattern = hook::pattern("83 3D ? ? ? ? ? 75 36 80 7B 28 00"); // TBoGT counter anims fix
                     if (!pattern.empty())
@@ -411,7 +443,7 @@ public:
                     else {
                         pattern = hook::pattern("39 1D ? ? ? ? 75 2A 80 7F 28 00");
                         injector::MakeNOP(pattern.get_first(7), 2, true);
-                    }
+                }
             }
             
             if (bExplosiveAnnihilator)
@@ -480,16 +512,20 @@ public:
                 }
 
                 pattern = hook::pattern("B8 ? ? ? ? 0F 44 E8 57");  // E2_landing marker
-                if (!pattern.empty())
+                if (!pattern.empty()) {
+                    injector::WriteMemory<uint8_t>(pattern.get_first(0), 0xBD, true);
                     injector::MakeNOP(pattern.get_first(5), 3, true);
+                }
                 else {
                     pattern = hook::pattern("BD ? ? ? ? 75 05");
                     injector::MakeNOP(pattern.get_first(5), 2, true);
                 }
 
                 pattern = hook::pattern("83 3D ? ? ? ? ? BB ? ? ? ? B8");  // E2_landing marker
-                if (!pattern.empty())
+                if (!pattern.empty()) {
+                    injector::WriteMemory<uint8_t>(pattern.get_first(12), 0xBB, true);
                     injector::MakeNOP(pattern.get_first(17), 3, true);
+                }
                 else {
                     pattern = hook::pattern("83 3D ? ? ? ? ? BB ? ? ? ? 75 05");
                     injector::MakeNOP(pattern.get_first(12), 2, true);
