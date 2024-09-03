@@ -23,6 +23,7 @@ The original repository has no support for GFWL (it does have support for outdat
 - Fix crash on viewing leaderboard. Thanks to [sTc2201](https://github.com/sTc2201) for providing the fix.
 - Change the default option of `SkipMenu` to 0 to be able to load into DLC's first.
 - Change the default option of `RecoilFix` to 0 to avoid being as disadvantage to other players in the multiplayer.
+- Enable Windowed by default, which also enables Borderless and No Block on Focus Loss.
 
 Keep in mind that you still want additional mods to be used for a pleasant GFWL multiplayer experience, including disabling the mod check to even allow this fork to work.
 
