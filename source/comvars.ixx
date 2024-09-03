@@ -911,11 +911,6 @@ export namespace CMenuManager
     uint8_t* bLoadscreenShown = nullptr;
 }
 
-export namespace CCutscenes
-{
-    uint32_t* m_dwCutsceneState;
-}
-
 export namespace CTimer
 {
     float* fTimeStep;

@@ -195,19 +195,6 @@ public:
                 if (!pattern.empty())
                     injector::WriteMemory(pattern.get_first(4), &f0, true);
             }
-
-            if (fScriptCutsceneFovLimit)
-            {
-                auto pattern = find_pattern("8B 4E 0C 89 48 60 5E C3", "D9 46 0C D9 58 60");
-                struct SetFOVHook
-                {
-                    void operator()(injector::reg_pack& regs)
-                    {
-                        float f = *(float*)(regs.esi + 0x0C);
-                        *(float*)(regs.eax + 0x60) = f > fScriptCutsceneFovLimit ? f : fScriptCutsceneFovLimit;
-                    }
-                }; injector::MakeInline<SetFOVHook>(pattern.get_first(0), pattern.get_first(6));
-            }
         };
 
         FusionFix::onInitEventAsync() += []()
