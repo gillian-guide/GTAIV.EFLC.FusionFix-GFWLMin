@@ -63,11 +63,9 @@ public:
             CIniReader iniReader("");
 
             int32_t nAimingZoomFix = iniReader.ReadInteger("MAIN", "AimingZoomFix", 1);
-            bool bRecoilFix = iniReader.ReadInteger("MAIN", "RecoilFix", 1) != 0;
 
             //[MISC]
             bool bDefaultCameraAngleInTLAD = iniReader.ReadInteger("MISC", "DefaultCameraAngleInTLAD", 0) != 0;
-            bool bPedDeathAnimFixFromTBOGT = iniReader.ReadInteger("MISC", "PedDeathAnimFixFromTBOGT", 1) != 0;
 
             //fix for zoom flag in tbogt
             if (nAimingZoomFix)
@@ -135,51 +133,11 @@ public:
                 }
             }
 
-            if (bRecoilFix)
-            {
-                static float fRecMult = 0.65f;
-                auto pattern = find_pattern("F3 0F 10 44 24 ? F3 0F 59 05 ? ? ? ? EB 1E E8 ? ? ? ? 84 C0", "F3 0F 10 44 24 ? F3 0F 59 05 ? ? ? ? EB ? E8");
-                injector::WriteMemory(pattern.get_first(10), &fRecMult, true);
-            }
-
             if (bDefaultCameraAngleInTLAD)
             {
                 static uint32_t episode_id = 0;
                 auto pattern = find_pattern<2>("83 3D ? ? ? ? ? 8B 01 0F 44 C2 89 01 B0 01 C2 08 00", "83 3D ? ? ? ? ? 75 06 C7 00 ? ? ? ? B0 01 C2 08 00");
                 injector::WriteMemory(pattern.count(2).get(0).get<void>(2), &episode_id, true);
-            }
-
-            if (bPedDeathAnimFixFromTBOGT)
-            {
-                auto pattern = hook::pattern("8B D9 75 2E");
-                if (!pattern.empty())
-                    injector::MakeNOP(pattern.get_first(2), 2, true);
-                else
-                {
-                    pattern = hook::pattern("BB ? ? ? ? 75 29 80 7F 28 00");
-                    injector::MakeNOP(pattern.get_first(5), 2, true);
-                }
-            }
-
-            {
-                static constexpr float xmm_0 = FLT_MAX / 2.0f;
-                unsigned char bytes[4];
-                auto n = (uint32_t)&xmm_0;
-                bytes[0] = (n >> 24) & 0xFF;
-                bytes[1] = (n >> 16) & 0xFF;
-                bytes[2] = (n >> 8) & 0xFF;
-                bytes[3] = (n >> 0) & 0xFF;
-
-                auto pattern = find_pattern("F3 0F 10 05 ? ? ? ? F3 0F 58 47 ? F3 0F 11 47 ? 8B D1 89 54 24 10", "F3 0F 10 05 ? ? ? ? F3 0F 58 46 ? 89 8C 24");
-                static raw_mem CoverCB(pattern.get_first(4), { bytes[3], bytes[2], bytes[1], bytes[0] });
-                FusionFixSettings.SetCallback("PREF_COVERCENTERING", [](int32_t value) {
-                    if (value)
-                        CoverCB.Restore();
-                    else
-                        CoverCB.Write();
-                });
-                if (!FusionFixSettings("PREF_COVERCENTERING"))
-                    CoverCB.Write();
             }
 
             // reverse lights fix

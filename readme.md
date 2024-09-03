@@ -8,7 +8,25 @@
 
 **I'M ALSO NOT DOING ANY HEAVY WORK ON THIS FORK, NOR DO I KNOW HOW MODDING WORKS, NOR DO I KNOW HOW TO CODE WITH C++, NOR DO I KNOW HOW DOES ASM WORK, NOR DO I KNOW HOW TO PORT MODS. DON'T ASK ME TO.**
 
-# GFWL Patch (this fork)
+# GFWL-Min Patch (this fork)
+**Do not use this fork for singleplayer, please.**
+
+This repository does additional changes to potentially improve compatibility with multiplayer by removing features that would only be useful in singleplayer. 
+
+Following features were removed:
+
+- Recoil fix.
+- **All** cutscene and mission fixes.
+- Loading text speed fix.
+- Alternative dialogues.
+- Ped Death Animation Fix from TBoGT.
+- Logitech RGB support.
+- DLL blacklist.
+- Mod updater.
+- Several ultrawide fixes, including pillarbox and letterbox.
+- And more I can't remember.
+
+# GFWL Patch (the fork this fork is based off)
 
 **Just because it says GFWL Patch doesn't mean you can't use this with xliveless.*
 
@@ -30,7 +48,7 @@ You can visit the [Grand Theft Auto RevIVal Discord Server](https://discord.gg/g
 
 ## Installing the GFWL Patch
 
-Install the [official release](https://github.com/ThirteenAG/GTAIV.EFLC.FusionFix/releases/latest) first, move the files out of the `plugins` folder into the root one, then apply [this patch](https://github.com/gillian-guide/GTAIV.EFLC.FusionFix-GFWL/releases/latest) on top of it.
+Install the [official release](https://github.com/ThirteenAG/GTAIV.EFLC.FusionFix/releases/latest) first, move the files out of the `plugins` folder into the root one, then apply [this patch](https://github.com/SandeMC/GTAIV.EFLC.FusionFix-GFWLMin/releases/latest) on top of it.
 
 If using ZolikaPatch, also disable following options in `ZolikaPatch.ini` or use the [Setup Utility](https://github.com/gillian-guide/GTAIVSetupUtilityWPF):
 
@@ -82,6 +100,59 @@ This projects aims to fix some issues in Grand Theft Auto IV: Complete Edition.
 Also available for [Max Payne 3](https://github.com/ThirteenAG/MaxPayne3.FusionFix#readme) and [other games](https://thirteenag.github.io/wfp).
 
 ![](https://github.com/user-attachments/assets/f9c6c978-3b19-422a-b561-4cf31716620b)
+
+# This fork
+
+The original repository has no support for GFWL (it does have support for outdated patches themselves, however) and blacklists several mods. This fork attempts to mitigate that with several simple fixes:
+
+- Disable the `xlive.dll` check to allow playing on outdated patches without `xlive.dll`.
+- Remove unnecessary mods from `dllblocklist.ixx`
+- Fix the missing `Multiplayer` button on the phone by changing a simple check in the `spcellphonemain.sco` and `spcellphonenetwork.sco`. Thanks to [ClaudeIII](https://github.com/ClaudeIII) for helping with the ASM part of the code.
+- Fix the Multiplayer Tutorial. Editing the `spcellphonetutorial.sco` and `multitutorial.sco` made the multiplayer tutorial somewhat functional. Thanks to [sTc2201](https://github.com/sTc2201) for providing the `multitutorial.sco` fixes.
+- Fix crash on viewing leaderboard. Thanks to [sTc2201](https://github.com/sTc2201) for providing the fix.
+- Chang the default option of `SkipMenu` to 0 to be able to load into DLC's first.
+
+Following changes also deviate from the original code, resulting in a subpar experience in some places:
+- [Comment out a fix for the loading text speed, as it didn't let the game boot for some reason and I have no clue how to work with patterns to even attempt to fix this.](https://github.com/gillian-guide/GTAIV.EFLC.FusionFix-GFWL/blob/5855b9caf1936ac2da3c295ef68e16e0905fa94a/source/frameratevigilante.ixx#L54)
+- Change the default option of `RecoilFix` to 0 to avoid being as disadvantage to other players in the multiplayer.
+
+Keep in mind that you still want additional mods to be used for a pleasant GFWL multiplayer experience, including disabling the mod check to even allow this fork to work.
+
+You can visit the [Grand Theft Auto RevIVal Discord Server](https://discord.gg/gtrf) for more information about GFWL multiplayer and people to play with (this patch was also made for these guys). You can also use [HappinessMP](https://happinessmp.net/) to play online on Complete Edition (doesn't allow any mods including FusionFix, however).
+
+## Installing the GFWL Patch
+
+Install the [official release](https://github.com/ThirteenAG/GTAIV.EFLC.FusionFix/releases/latest) first, move the files out of the `plugins` folder into the root one, then apply [this patch](https://github.com/gillian-guide/GTAIV.EFLC.FusionFix-GFWL/releases/latest) on top of it.
+
+If using ZolikaPatch, also disable following options in `ZolikaPatch.ini`:
+- BuildingAlphaFix
+- EmissiveLerpFix
+- BikePhoneAnimsFix
+- BorderlessWindowed
+- HighFPSBikePhysicsFix
+- HighFPSSpeedupFix
+- ReversingLightFix
+- SkipIntro
+- SkipMenu
+
+You may also use the [Setup Utility](https://github.com/gillian-guide/GTAIVSetupUtilityWPF) afterwards (it takes care of disabling incompatible ZolikaPatch options aswell).
+
+## Compiling FusionFix + GFWL Patch manually
+[![Actions Status: Release](https://github.com/gillian-guide/GTAIV.EFLC.FusionFix-GFWL/actions/workflows/msvc_x86.yml/badge.svg)](https://github.com/gillian-guide/GTAIV.EFLC.FusionFix-GFWL/actions)
+
+I include the rest of the original repository for the purposes of compiling the mod manually (including the patch) if you wish to do so.
+
+1. Clone this fork recursively (`git clone https://github.com/gillian-guide/GTAIV.EFLC.FusionFix-GFWL.git --recursive`).
+2. Open `premake5.bat` to generate a compileable Visual Studio project.
+3. Compile the project in `build` with whatever tools you prefer - MSBuild, Visual Studio etc.
+4. Launch `release.bat` and wait for it to finish.
+5. The complete thing *should* be in the `release` folder.
+
+# GTAIV.EFLC.FusionFix
+
+This projects aims to fix some issues in Grand Theft Auto IV: Complete Edition.
+
+![](https://github.com/ThirteenAG/GTAIV.EFLC.FusionFix/assets/4904157/ba388163-c26a-41ae-8378-bef4037c4fd7)
 
 ## Installation:
 

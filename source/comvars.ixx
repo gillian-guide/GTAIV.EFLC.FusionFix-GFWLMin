@@ -1136,9 +1136,6 @@ public:
         if (!pattern.empty())
             CGameConfigReader::ms_imgFiles = *pattern.get_first<decltype(CGameConfigReader::ms_imgFiles)>(1);
 
-        pattern = hook::pattern("A1 ? ? ? ? 83 F8 08 74 05");
-        CCutscenes::m_dwCutsceneState = *pattern.get_first<uint32_t*>(1);
-
         pattern = find_pattern("80 3D ? ? ? ? ? 74 0E 68 ? ? ? ? 53", "80 3D ? ? ? ? ? 74 13 68");
         rage::grcWindow::ms_bWindowed = *pattern.get_first<bool*>(2);
 

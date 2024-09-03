@@ -2,7 +2,6 @@
 
 import common;
 import comvars;
-import dllblacklist;
 import fusiondxhook;
 
 injector::hook_back<void(*)()> hbCGameProcess;
@@ -138,7 +137,6 @@ extern "C"
     {
         std::call_once(CallbackHandler::flag, []()
         {
-            CompatibilityWarnings();
             CallbackHandler::RegisterCallback(Init, hook::pattern("F3 0F 10 44 24 ? F3 0F 59 05 ? ? ? ? EB ? E8"));
         });
     }

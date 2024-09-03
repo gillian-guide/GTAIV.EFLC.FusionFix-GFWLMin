@@ -12,9 +12,6 @@ import settings;
 
 int32_t nFrameLimitType;
 float fFpsLimit;
-float fCutsceneFpsLimit;
-float fScriptCutsceneFpsLimit;
-float fScriptCutsceneFovLimit;
 float fLoadingFpsLimit;
 
 class FrameLimiter
@@ -126,40 +123,17 @@ bool __cdecl sub_411F50(uint32_t* a1, uint32_t* a2)
 }
 
 FrameLimiter FpsLimiter;
-FrameLimiter CutsceneFpsLimiter;
-FrameLimiter ScriptCutsceneFpsLimiter;
 FrameLimiter LoadingFpsLimiter;
 FrameLimiter LoadingFpsLimiter2;
-bool(*CCutscenes__hasCutsceneFinished)();
-bool(*CCamera__isWidescreenBordersActive)();
-bool bUnlockFramerateDuringLoadscreens = true;
 void __cdecl sub_855640()
 {
     static auto preset = FusionFixSettings.GetRef("PREF_FPS_LIMIT_PRESET");
 
-    if ((CMenuManager::bLoadscreenShown && !*CMenuManager::bLoadscreenShown && !bLoadingShown) || !bUnlockFramerateDuringLoadscreens)
+    if ((CMenuManager::bLoadscreenShown && !*CMenuManager::bLoadscreenShown && !bLoadingShown))
     {
         if (preset && *preset >= FusionFixSettings.FpsCaps.eCustom) {
             if (fFpsLimit > 0.0f || (*preset > FusionFixSettings.FpsCaps.eCustom && *preset < int32_t(FusionFixSettings.FpsCaps.data.size())))
                 FpsLimiter.Sync();
-        }
-    }
-
-    if (CCamera__isWidescreenBordersActive())
-    {
-        if (CCutscenes__hasCutsceneFinished())
-        {
-            if (fCutsceneFpsLimit)
-                CutsceneFpsLimiter.Sync();
-            else if (fScriptCutsceneFpsLimit)
-                ScriptCutsceneFpsLimiter.Sync();
-
-            // To avoid more softlocks with high fps
-            if (!fCutsceneFpsLimit && CCutscenes::m_dwCutsceneState)
-            {
-                if (*CCutscenes::m_dwCutsceneState == 9 || *CCutscenes::m_dwCutsceneState == 10)
-                    LoadingFpsLimiter2.Sync();
-            }
         }
     }
 }
@@ -183,11 +157,7 @@ public:
             //[FRAMELIMIT]
             nFrameLimitType = iniReader.ReadInteger("FRAMELIMIT", "FrameLimitType", 2);
             fFpsLimit = static_cast<float>(iniReader.ReadInteger("FRAMELIMIT", "FpsLimit", 0));
-            fCutsceneFpsLimit = static_cast<float>(iniReader.ReadInteger("FRAMELIMIT", "CutsceneFpsLimit", 0));
-            fScriptCutsceneFpsLimit = static_cast<float>(iniReader.ReadInteger("FRAMELIMIT", "ScriptCutsceneFpsLimit", 0));
-            fScriptCutsceneFovLimit = static_cast<float>(iniReader.ReadInteger("FRAMELIMIT", "ScriptCutsceneFovLimit", 0));
             fLoadingFpsLimit = static_cast<float>(iniReader.ReadInteger("FRAMELIMIT", "LoadingFpsLimit", 30));
-            bUnlockFramerateDuringLoadscreens = iniReader.ReadInteger("FRAMELIMIT", "UnlockFramerateDuringLoadscreens", 0) != 0;
 
             //if (fFpsLimit || fCutsceneFpsLimit || fScriptCutsceneFpsLimit)
             {
@@ -200,17 +170,10 @@ public:
                     FpsLimiter.Init(mode, (float)FusionFixSettings.FpsCaps.data[preset]);
                 else
                     FpsLimiter.Init(mode, fFpsLimit);
-                CutsceneFpsLimiter.Init(mode, fCutsceneFpsLimit);
-                ScriptCutsceneFpsLimiter.Init(mode, fScriptCutsceneFpsLimit);
                 LoadingFpsLimiter.Init(mode, std::clamp(fLoadingFpsLimit, 30.0f, FLT_MAX));
                 LoadingFpsLimiter2.Init(mode, 240.0f);
 
-                auto pattern = find_pattern("E8 ? ? ? ? 84 C0 75 89", "E8 ? ? ? ? 84 C0 75 15 38 05");
-                CCutscenes__hasCutsceneFinished = (bool(*)()) injector::GetBranchDestination(pattern.get_first(0)).get();
-                pattern = find_pattern("E8 ? ? ? ? 84 C0 75 44 38 05 ? ? ? ? 74 26", "E8 ? ? ? ? 84 C0 75 42 38 05");
-                CCamera__isWidescreenBordersActive = (bool(*)()) injector::GetBranchDestination(pattern.get_first(0)).get();
-
-                pattern = find_pattern("8B 35 ? ? ? ? 8B 0D ? ? ? ? 8B 15 ? ? ? ? A1", "A1 ? ? ? ? 83 F8 01 8B 0D");
+                auto pattern = find_pattern("8B 35 ? ? ? ? 8B 0D ? ? ? ? 8B 15 ? ? ? ? A1", "A1 ? ? ? ? 83 F8 01 8B 0D");
                 injector::WriteMemory(pattern.get_first(0), 0x901CC483, true); //nop + add esp,1C
                 injector::MakeJMP(pattern.get_first(4), sub_855640, true); // + jmp
 
