@@ -65,7 +65,9 @@ workspace "GTAIV.EFLC.FusionFix"
    includedirs { "external/hooking" }
    includedirs { "external/injector/include" }
    includedirs { "external/inireader" }
+   includedirs { "external/modupdater/dist" }
    includedirs { "source/gxt/src" }
+   libdirs { "external/modupdater/dist" }
    files { "external/hooking/Hooking.Patterns.h", "external/hooking/Hooking.Patterns.cpp" }
    files { "external/injector/safetyhook/include/**.hpp", "external/injector/safetyhook/src/**.cpp" }
    files { "external/injector/zydis/**.h", "external/injector/zydis/**.c" }
@@ -102,6 +104,16 @@ workspace "GTAIV.EFLC.FusionFix"
       end
       targetdir ("bin")
    end
+   
+   filter "configurations:Debug"
+      defines { "DEBUG" }
+      symbols "On"
+      links { "libmodupdater_debug_win32.lib" }
+
+   filter "configurations:Release"
+      defines { "NDEBUG" }
+      optimize "On"
+      links { "libmodupdater_release_win32.lib" }
       
 project "GTAIV.EFLC.FusionFix"
    setpaths("H:/SteamLibrary/steamapps/common/Grand Theft Auto IV/GTAIV/", "GTAIV.exe", "plugins/")
