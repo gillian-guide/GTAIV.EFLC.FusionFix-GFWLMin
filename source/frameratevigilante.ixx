@@ -51,20 +51,6 @@ public:
                 }; injector::MakeInline<FramerateVigilanteHook1>(pattern.get_first(0), pattern.get_first(6));
             }
 
-            pattern = find_pattern("F3 0F 10 05 ? ? ? ? F3 0F 58 C1 F3 0F 11 05 ? ? ? ? EB 36", "F3 0F 10 05 ? ? ? ? F3 0F 58 05 ? ? ? ? F3 0F 11 05 ? ? ? ? EB 30");
-            if (!pattern.empty())
-            {
-                static auto f1032790 = *pattern.get_first<float*>(4);
-                struct LoadingTextSpeed
-                {
-                    void operator()(injector::reg_pack& regs)
-                    {
-                        regs.xmm0.f32[0] = *f1032790 * *CTimer::fTimeStep;
-                        regs.xmm0.f32[0] += regs.xmm1.f32[0];
-                    }
-                }; injector::MakeInline<LoadingTextSpeed>(pattern.get_first(0), pattern.get_first(12));
-            }
-
             pattern = hook::pattern("F3 0F 58 0D ? ? ? ? 0F 5B C0 F3 0F 11 0D");
             if (!pattern.empty())
             {
