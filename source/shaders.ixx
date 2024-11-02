@@ -57,7 +57,14 @@ public:
         static float fSHADOWFILTERSOFTShadowSoftness = 3.0f;
         static float fSHADOWFILTERSOFTShadowBias = 8.0f;
 
-        static float fShadowBlendRange = 0.3f;
+        static float fSHADOWFILTERCHSSShadowSoftness = 1.5f;
+        static float fSHADOWFILTERCHSSShadowBias = 5.0f;
+        static float fSHADOWFILTERCHSSMaxSoftness = 10.0f;
+        static float fSHADOWFILTERCHSSLightSize = 500.0f;
+        static float fSHADOWFILTERCHSSExtraBias = 2.0f;
+
+        static float fShadowSoftnessBlendRange = 0.3f;
+        static float fShadowBiasBlendRange = 0.3f;
 
         static int nForceShadowFilter = 0;
 
@@ -72,8 +79,17 @@ public:
             fSHADOWFILTERSHARPShadowBias = iniReader.ReadFloat("SHADOWFILTERSHARP", "ShadowBias", 5.0f);
             fSHADOWFILTERSOFTShadowSoftness = iniReader.ReadFloat("SHADOWFILTERSOFT", "ShadowSoftness", 3.0f);
             fSHADOWFILTERSOFTShadowBias = iniReader.ReadFloat("SHADOWFILTERSOFT", "ShadowBias", 8.0f);
-            fShadowBlendRange = std::clamp(iniReader.ReadFloat("SHADOWS", "ShadowBlendRange", 0.3f), 0.0f, 1.0f);
+
+            fSHADOWFILTERCHSSShadowSoftness = iniReader.ReadFloat("SHADOWFILTERCHSS", "ShadowSoftness", 1.5f);
+            fSHADOWFILTERCHSSShadowBias = iniReader.ReadFloat("SHADOWFILTERCHSS", "ShadowBias", 5.0f);
+            fSHADOWFILTERCHSSMaxSoftness = iniReader.ReadFloat("SHADOWFILTERCHSS", "MaxSoftness", 10.0f);
+            fSHADOWFILTERCHSSLightSize = iniReader.ReadFloat("SHADOWFILTERCHSS", "LightSize", 500.0f);
+            fSHADOWFILTERCHSSExtraBias = iniReader.ReadFloat("SHADOWFILTERCHSS", "ExtraBias", 2.0f);
+
+            fShadowSoftnessBlendRange = std::clamp(iniReader.ReadFloat("SHADOWS", "ShadowSoftnessBlendRange", 0.3f), 0.0f, 1.0f);
+            fShadowBiasBlendRange = std::clamp(iniReader.ReadFloat("SHADOWS", "ShadowBiasBlendRange", 0.3f), 0.0f, 1.0f);
             nForceShadowFilter = std::clamp(iniReader.ReadInteger("SHADOWS", "ForceShadowFilter", 0), 0, 2);
+            bool bConsoleCarReflectionsAndDirt = iniReader.ReadInteger("MISC", "ConsoleCarReflectionsAndDirt", 1) != 0;
 
             // Redirect path to one unified folder
             auto pattern = hook::pattern("8B 04 8D ? ? ? ? A3 ? ? ? ? 8B 44 24 04");
@@ -101,6 +117,43 @@ public:
                         *(const char**)&regs.edx = *off_1045520;
                     }
                 }; injector::MakeInline<ShaderPathHook>(pattern.get_first(0), pattern.get_first(7));
+            }
+
+            // Actually read the rain lighting settings in the visualsettings.dat
+            {
+                auto pattern = hook::pattern("8D 44 24 2C 50 FF 33 F3 0F 11 44 24 ? 56 E8");
+                if (!pattern.empty())
+                {
+                    injector::WriteMemory<uint8_t>(pattern.get_first(3), 0x34, true);
+                    pattern = hook::pattern("8D 44 24 2C 50 FF 73 04 F3 0F 11 44 24 ? 56 E8");
+                    injector::WriteMemory<uint8_t>(pattern.get_first(3), 0x30, true);
+                    pattern = hook::pattern("8D 44 24 2C 50 FF 73 08 F3 0F 11 44 24 ? 56 E8");
+                    injector::WriteMemory<uint8_t>(pattern.get_first(3), 0x38, true);
+                    pattern = hook::pattern("8D 44 24 2C 50 FF 73 0C F3 0F 11 44 24 ? 56 E8");
+                    injector::WriteMemory<uint8_t>(pattern.get_first(3), 0x3C, true);
+                }
+                else
+                {
+                    pattern = hook::pattern("F3 0F 10 05 ? ? ? ? 53 56 57 8B 7C 24 10 6A 05");
+                    injector::MakeNOP(pattern.get_first(0), 8, true);
+                    pattern = hook::pattern("F3 0F 11 44 24 ? F3 0F 10 05 ? ? ? ? 68 ? ? ? ? F3 0F 11 44 24 ? F3 0F 10 05 ? ? ? ? 50");
+                    injector::MakeNOP(pattern.get_first(0), 14, true);
+                    pattern = hook::pattern("F3 0F 11 44 24 ? F3 0F 10 05 ? ? ? ? 50 F3 0F 11 44 24 ? F3 0F 10 05 ? ? ? ? 8D 5F 14");
+                    injector::MakeNOP(pattern.get_first(0), 14, true);
+                    pattern = hook::pattern("F3 0F 11 44 24 ? F3 0F 10 05 ? ? ? ? 8D 5F 14 53 F3 0F 11 44 24");
+                    injector::MakeNOP(pattern.get_first(0), 14, true);
+                    pattern = hook::pattern("F3 0F 11 44 24 ? E8 ? ? ? ? 8B 0D ? ? ? ? 8B 56 10");
+                    injector::MakeNOP(pattern.get_first(0), 6, true);
+                }
+            }
+
+            // Restore console car reflections and dirt level settings. Any car on console could have dirt when they would spawn while on PC some cars _always_ spawn fully cleaned.
+            if (bConsoleCarReflectionsAndDirt)
+            {
+                auto pattern = find_pattern("75 0C C7 87 ? ? ? ? ? ? ? ? EB 20 66 0F 6E C2 F3 0F E6 C0 C1 EA 1F F2 0F 58 04 D5", "75 0D 0F 57 C0 F3 0F 11 86 ? ? ? ? EB 18 85 D2 89 54 24 10 DB 44 24 10 7D 06 D8 05");
+                injector::WriteMemory<uint8_t>(pattern.get_first(0), 0xEB, true);
+                pattern = find_pattern("75 37 C7 47 ? ? ? ? ? C7 87 ? ? ? ? ? ? ? ? C7 87", "75 3A F3 0F 10 05 ? ? ? ? F3 0F 11 46 ? F3 0F 11 86");
+                injector::MakeNOP(pattern.get_first(0), 2, true);
             }
         };
 
@@ -149,6 +202,7 @@ public:
                     // Shadow Ini Settings
                     {
                         static float arr7[4];
+                        static float arr9[4];
                         static auto shadowFilter = FusionFixSettings.GetRef("PREF_SHADOWFILTER");
 
                         if (shadowFilter->get() == FusionFixSettings.ShadowFilterText.eSoft)
@@ -156,16 +210,31 @@ public:
                             arr7[0] = fSHADOWFILTERSOFTShadowSoftness;
                             arr7[1] = fSHADOWFILTERSOFTShadowBias;
                         }
-                        else
+                        else if (shadowFilter->get() == FusionFixSettings.ShadowFilterText.eSharp)
                         {
                             arr7[0] = fSHADOWFILTERSHARPShadowSoftness;
                             arr7[1] = fSHADOWFILTERSHARPShadowBias;
                         }
+                        else //eCHSS
+                        {
+                            arr7[0] = fSHADOWFILTERCHSSShadowSoftness;
+                            arr7[1] = fSHADOWFILTERCHSSShadowBias;
+                        }
 
-                        arr7[2] = fShadowBlendRange;
-                        arr7[3] = bEnableSnow ? 1.0f : 0.0f;
+                        arr7[2] = (fShadowBiasBlendRange < fShadowSoftnessBlendRange) ? fShadowSoftnessBlendRange : fShadowBiasBlendRange;
+                        arr7[3] = fShadowSoftnessBlendRange;
 
                         pDevice->SetPixelShaderConstantF(218, &arr7[0], 1);
+
+                        arr9[0] = bHighResolutionShadows ? fSHADOWFILTERCHSSMaxSoftness * 2.0f : fSHADOWFILTERCHSSMaxSoftness;
+                        arr9[1] = bHighResolutionShadows ? fSHADOWFILTERCHSSLightSize * 2.0f : fSHADOWFILTERCHSSLightSize;
+                        arr9[2] = fSHADOWFILTERCHSSExtraBias;
+                        if (FusionFixSettings.Get("PREF_SHADOW_QUALITY") >= 4) // Very High
+                            arr9[3] = shadowFilter->get() == FusionFixSettings.ShadowFilterText.eCHSS ? 1.0f : 0.0f;
+                        else
+                            arr9[3] = 0.0f;
+
+                        pDevice->SetPixelShaderConstantF(217, &arr9[0], 1);
                     }
 
                     // Shadow Quality
@@ -229,7 +298,7 @@ public:
                             arr5[0] = 1.0f;
                         }
 
-                        arr5[1] = 0.0f;
+                        arr5[1] = bEnableSnow ? 1.0f : 0.0f;
                         arr5[2] = 1.0f / (30.0f * Natives::Timestep());
                         arr5[3] = treealpha->get() == FusionFixSettings.TreeAlphaText.eConsole ? fTreeAlphaConsole : fTreeAlphaPC;
                         pDevice->SetPixelShaderConstantF(221, &arr5[0], 1);
