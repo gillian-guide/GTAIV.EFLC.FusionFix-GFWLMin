@@ -86,25 +86,6 @@ public:
                     }
                 }; injector::MakeInline<CDSpinnerHook>(pattern.get_first(0), pattern.get_first(8));
             }
-            
-            // Cop blips
-            static int CustomFrameCounter = 0;
-            pattern = hook::pattern("A1 ? ? ? ? 6B C0 15");
-            if (!pattern.empty())
-                injector::WriteMemory(pattern.get_first(1), &CustomFrameCounter, true);
-
-            pattern = hook::pattern("FF 05 ? ? ? ? F3 0F 2C C0");
-            if (!pattern.empty())
-            {
-                static auto CounterHook = safetyhook::create_mid(pattern.get_first(), [](SafetyHookContext& regs)
-                {
-                    static float accumulator = 0.0f;
-                    accumulator += (*CTimer::fTimeStep / (1.0f / 30.0f));
-                    int increment = static_cast<int>(accumulator);
-                    CustomFrameCounter += increment;
-                    accumulator -= increment;
-                });
-            }
         };
     }
 } FramerateVigilante;
