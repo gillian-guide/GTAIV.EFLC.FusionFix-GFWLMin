@@ -32,13 +32,7 @@ public:
     {
         FusionFix::onInitEventAsync() += []()
         {
-            if (FusionFixSettings.Get("PREF_UPDATE"))
-                Initialize();
-            
-            FusionFixSettings.SetCallback("PREF_UPDATE", [](int32_t value) {
-                if (value)
-                    Initialize();
-            });
+                return;
         };
     }
 } ModUpdater;

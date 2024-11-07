@@ -51,8 +51,7 @@ public:
                 }; injector::MakeInline<FramerateVigilanteHook1>(pattern.get_first(0), pattern.get_first(6));
             }
 
-            pattern = hook::pattern("F3 0F 10 05 ? ? ? ? F3 0F 58 C1 F3 0F 11 05 ? ? ? ? EB 36");
-            if (!pattern.empty())
+            pattern = hook::pattern("F3 0F 10 05 D4 A3 22 01 F3 0F 58 C1 F3 0F 11 05 D4 A3 22 01 F3 0F");
             {
                 static auto f1032790 = *pattern.get_first<float*>(4);
                 struct LoadingTextSpeed
