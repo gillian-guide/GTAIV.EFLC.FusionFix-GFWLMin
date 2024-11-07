@@ -22,7 +22,7 @@ workspace "GTAIV.EFLC.FusionFix"
    defines { "rsc_LegalCopyright=\"GTAIV.EFLC.FusionFix\""} 
    defines { "rsc_InternalName=\"%{prj.name}\"", "rsc_ProductName=\"%{prj.name}\"", "rsc_OriginalFilename=\"%{prj.name}.dll\"" }
    defines { "rsc_FileDescription=\"GTAIV.EFLC.FusionFix\"" }
-   defines { "rsc_UpdateUrl=\"https://github.com/ThirteenAG/GTAIV.EFLC.FusionFix\"" }
+   defines { "rsc_UpdateUrl=\"https://github.com/gillian-guide/GTAIV.EFLC.FusionFix-GFWL\"" }
 
    local major = 1
    local minor = 0
