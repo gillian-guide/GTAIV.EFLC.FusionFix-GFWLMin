@@ -21,7 +21,6 @@ Following features were removed:
 - Alternative dialogues.
 - Ped Death Animation Fix from TBoGT.
 - Logitech RGB support.
-- Mod updater.
 - Several ultrawide fixes, including pillarbox and letterbox.
 - And more I can't remember.
 
@@ -47,7 +46,7 @@ Keep in mind that you still want additional mods to be used for a pleasant GFWL 
 You can visit the [Grand Theft Auto RevIVal Discord Server](https://discord.gg/gtrf) for more information about GFWL multiplayer and people to play with (this patch was also made for these guys). You can also use [HappinessMP](https://happinessmp.net/) to play online on Complete Edition (doesn't allow any mods including FusionFix, however).
 
 ## Installing the GFWL Patch
-
+### Since v3.4, you can just download the fork alone and extract it. ZPatch option modifications stil apply, however.
 Install the [official release](https://github.com/ThirteenAG/GTAIV.EFLC.FusionFix/releases/latest) first, move the files out of the `plugins` folder into the root one, then apply [this patch](https://github.com/gillian-guide/GTAIV.EFLC.FusionFix-GFWLMin/releases/latest) on top of it.
 
 If using ZolikaPatch, also disable following options in `ZolikaPatch.ini` or use the [Setup Utility](https://github.com/gillian-guide/GTAIVSetupUtilityWPF):
