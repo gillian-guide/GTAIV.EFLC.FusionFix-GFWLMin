@@ -52,6 +52,7 @@ public:
             }
 
             pattern = hook::pattern("F3 0F 10 05 D4 A3 22 01 F3 0F 58 C1 F3 0F 11 05 D4 A3 22 01 F3 0F");
+            if (!pattern.empty())
             {
                 static auto f1032790 = *pattern.get_first<float*>(4);
                 struct LoadingTextSpeed
