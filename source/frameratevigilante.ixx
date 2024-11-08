@@ -89,6 +89,7 @@ public:
                         }
                     }; injector::MakeInline<LoadingTextSparks>(pattern.get_first(0), pattern.get_first(8));
                 }
+            }
 
             // CD/busy spinner
             pattern = hook::pattern("F3 0F 58 05 ? ? ? ? 33 C0 A3 ? ? ? ? F3 0F 11 05");
