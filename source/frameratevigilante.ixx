@@ -79,14 +79,16 @@ public:
             else
             {
                 pattern = hook::pattern("F3 0F 58 05 ? ? ? ? F3 0F 2A 0D");
-                struct LoadingTextSparks
+                if (!pattern.empty())
                 {
-                    void operator()(injector::reg_pack& regs)
+                    struct LoadingTextSparks
                     {
-                        regs.xmm0.f32[0] += 0.085f * *CTimer::fTimeStep;
-                    }
-                }; injector::MakeInline<LoadingTextSparks>(pattern.get_first(0), pattern.get_first(8));
-            }
+                        void operator()(injector::reg_pack& regs)
+                        {
+                            regs.xmm0.f32[0] += 0.085f * *CTimer::fTimeStep;
+                        }
+                    }; injector::MakeInline<LoadingTextSparks>(pattern.get_first(0), pattern.get_first(8));
+                }
 
             // CD/busy spinner
             pattern = hook::pattern("F3 0F 58 05 ? ? ? ? 33 C0 A3 ? ? ? ? F3 0F 11 05");
