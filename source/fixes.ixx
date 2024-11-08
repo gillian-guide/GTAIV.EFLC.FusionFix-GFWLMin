@@ -382,11 +382,11 @@ public:
             }
 
             // Water Foam Height Weirdness
-            {
-                auto pattern = hook::pattern("F3 0F 58 0D ? ? ? ? 83 EC 08 F3 0F 59 05");
-                if (!pattern.empty())
-                    injector::MakeNOP(pattern.get_first(0), 8, true);
-            }
+            //{
+            //    auto pattern = hook::pattern("F3 0F 58 0D ? ? ? ? 83 EC 08 F3 0F 59 05");
+            //    if (!pattern.empty())
+            //        injector::MakeNOP(pattern.get_first(0), 8, true);
+            //}
             
             // Render LOD lights during cutscenes (console behavior)
             {
@@ -460,18 +460,6 @@ public:
                     injector::WriteMemory<uint16_t>(pattern.get_first(0), 0x840F, true); // jnz short -> jz long
                     injector::WriteMemory(pattern.get_first(2), ptr, true);
                     injector::MakeNOP(pattern.get_first(6), 23, true);
-                }
-            }
-
-            // Enable the "first person" reticle (Annihilator, Buzzard) on gamepads as well, this used to be a keyboard & mouse feature only.
-            {
-                auto pattern = hook::pattern("85 F6 0F 84 ? ? ? ? 80 BE ? ? ? ? ? 0F 84 ? ? ? ? 85 C9 0F 84");
-                if (!pattern.empty())
-                    injector::MakeNOP(pattern.get_first(0), 21, true);
-                else
-                {
-                    pattern = hook::pattern("8B 4C 24 24 85 C9 0F 84 ? ? ? ? 80 B9 ? ? ? ? ? 0F 84");
-                    injector::MakeNOP(pattern.get_first(0), 25, true);
                 }
             }
 

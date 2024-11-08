@@ -24,31 +24,27 @@ public:
             auto pattern = find_pattern("E8 ? ? ? ? D9 5C 24 7C F3 0F 10 4C 24", "E8 ? ? ? ? D9 5C 24 70 F3 0F 10 44 24 ? F3 0F 58 86");
             hbsub_A18510.fun = injector::MakeCALL(pattern.get_first(0), sub_A18510).get();
 
-            // By Sergeanur
-            pattern = hook::pattern("F3 0F 10 45 ? 51 8B CF F3 0F 11 04 24 E8 ? ? ? ? 8A 8F");
+            pattern = hook::pattern("F3 0F 58 05 ? ? ? ? F3 0F 2A 0D");
             if (!pattern.empty())
             {
-                struct FramerateVigilanteHook1
+                struct LoadingTextSparks
                 {
                     void operator()(injector::reg_pack& regs)
                     {
-                        float f = std::clamp(*(float*)(regs.ebp + 0x08), 1.0f / 150.0f, FLT_MAX);
-                        *(float*)(regs.ebp + 0x08) = f;
-                        regs.xmm0.f32[0] = f;
+                        regs.xmm1.f32[0] += 0.085f * *CTimer::fTimeStep;
                     }
-                }; injector::MakeInline<FramerateVigilanteHook1>(pattern.get_first(0));
+                }; injector::MakeInline<LoadingTextSparks>(pattern.get_first(0), pattern.get_first(8));
             }
             else
             {
-                pattern = hook::pattern("8B BE ? ? ? ? 33 C9 85 FF 7E 47 8A 5D 0C 33 D2 8D A4 24 ? ? ? ? 3B CF 7D 0A 8B 86 ? ? ? ? 03 C2 EB 02 33 C0 F6 80 ? ? ? ? ? 74 11 83 B8 ? ? ? ? ? 74 08 84 DB 0F 85 ? ? ? ? 83 C1 01 81 C2 ? ? ? ? 3B 8E ? ? ? ? 7C C5 D9 45 08 51 8B CE D9 1C 24 E8 ? ? ? ? 8A 86");
-                struct FramerateVigilanteHook1
+                pattern = hook::pattern("F3 0F 58 0D ? ? ? ? 0F 5B C0 F3 0F 11 0D");
+                struct LoadingTextSparks
                 {
                     void operator()(injector::reg_pack& regs)
                     {
-                        regs.edi = *(uint32_t*)(regs.esi + 0xFD4);
-                        *(float*)(regs.ebp + 0x08) = std::clamp(*(float*)(regs.ebp + 0x08), 1.0f / 150.0f, FLT_MAX);
+                        regs.xmm0.f32[0] += 0.085f * *CTimer::fTimeStep;
                     }
-                }; injector::MakeInline<FramerateVigilanteHook1>(pattern.get_first(0), pattern.get_first(6));
+                }; injector::MakeInline<LoadingTextSparks>(pattern.get_first(0), pattern.get_first(8));
             }
         };
     }
