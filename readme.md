@@ -21,7 +21,7 @@ The original repository has no support for GFWL (it does have support for outdat
 - Fix the missing `Multiplayer` button on the phone by changing a simple check in the `spcellphonemain.sco` and `spcellphonenetwork.sco`. Thanks to [ClaudeIII](https://github.com/ClaudeIII) for helping with the ASM part of the code.
 - Fix the Multiplayer Tutorial. Editing the `spcellphonetutorial.sco` and `multitutorial.sco` made the multiplayer tutorial somewhat functional. Thanks to [sTc2201](https://github.com/sTc2201) for providing the `multitutorial.sco` fixes.
 - Fix crash on viewing leaderboard. Thanks to [sTc2201](https://github.com/sTc2201) for providing the fix.
-- Fix Extra Info not working on 1.0.8.0 (but it now doesn't work on 1.2.0.59). Thanks to [Kev7cks](https://github.com/Kev7cks) for providing the fix ([#6](https://github.com/gillian-guide/GTAIV.EFLC.FusionFix-GFWL/pull/6))
+- Fix Extra Info not working on 1.0.8.0 (but it now doesn't work on 1.2.0.59). Thanks to [Kev7cks](https://github.com/Kev7cks) for providing the [fix](https://github.com/gillian-guide/GTAIV.EFLC.FusionFix-GFWL/pull/6).
 - Change the default option of `SkipMenu` to 0 to be able to load into DLC's first.
 - Change the default option of `RecoilFix` to 0 to avoid being as disadvantage to other players in the multiplayer.
 - Enable Windowed by default, which also enables Borderless and No Block on Focus Loss.
