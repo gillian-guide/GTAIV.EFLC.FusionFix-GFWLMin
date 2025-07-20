@@ -22,7 +22,7 @@ public:
 
             if (bExtraInfo)
             {
-                auto pattern = hook::pattern("F3 0F 10 44 24 ? 6A FF 6A FF 50 83 EC 08 F3 0F 11 44 24 ? F3 0F 10 44 24 ? F3 0F 11 04 24 E8 ? ? ? ? 83 C4 14");
+                auto pattern = hook::pattern("D9 44 24 0C 6A FF 6A FF 52 83 EC 08 D9 5C 24 04 D9 44 24 1C D9 1C 24 E8 ? ? ? ? 83 C4 14");
                 if (!pattern.empty())
                 {
                     static auto PauseHook = safetyhook::create_mid(pattern.get_first(0), [](SafetyHookContext& regs)
@@ -31,7 +31,7 @@ public:
                         
                         if (CGameConfigReader::ms_imgFiles && pMenuTab && *pMenuTab == 49)
                         {
-                            auto s = std::wstring_view((wchar_t*)regs.eax);
+                            auto s = std::wstring_view((wchar_t*)regs.edx);
                             auto imgNum = 0;
                             auto imgArrSize = 0;
                             for (auto& it : *CGameConfigReader::ms_imgFiles)
@@ -106,7 +106,7 @@ public:
                                 }
                             }
 
-                            regs.eax = (uintptr_t)extra.c_str();
+                            regs.edx = (uintptr_t)extra.c_str();
                         }
                     });
                 }
