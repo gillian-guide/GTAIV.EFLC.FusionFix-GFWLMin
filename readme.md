@@ -12,7 +12,7 @@
 
 **Just because it says GFWL Patch doesn't mean you can't use this with xliveless.*
 
-**Some features made after v2.4.2 lack an implementation for nonCE, so in some ways, the experience is subpar to CE.*
+**Some features made after v2.4.2 lack an implementation for nonCE, so in some ways, the experience is subpar to CE. Though a lot of issues were alleviated thanks to [Kev7cks](https://github.com/Kev7cks).*
 
 The original repository has no support for GFWL (it does have support for outdated patches themselves, however - props to Fusion Team for keeping new features in-tact for old versions). This fork attempts to mitigate that with several simple fixes:
 
@@ -21,7 +21,7 @@ The original repository has no support for GFWL (it does have support for outdat
 - Fix the missing `Multiplayer` button on the phone by changing a simple check in the `spcellphonemain.sco` and `spcellphonenetwork.sco`. Thanks to [ClaudeIII](https://github.com/ClaudeIII) for helping with the ASM part of the code.
 - Fix the Multiplayer Tutorial. Editing the `spcellphonetutorial.sco` and `multitutorial.sco` made the multiplayer tutorial somewhat functional. Thanks to [sTc2201](https://github.com/sTc2201) for providing the `multitutorial.sco` fixes.
 - Fix crash on viewing leaderboard. Thanks to [sTc2201](https://github.com/sTc2201) for providing the fix.
-- Fix Extra Info not working on 1.0.8.0 (but it now doesn't work on 1.2.0.59). Thanks to [Kev7cks](https://github.com/Kev7cks) for providing the [fix](https://github.com/gillian-guide/GTAIV.EFLC.FusionFix-GFWL/pull/6).
+- Added patterns for 1.0.8.0/1.0.7.0 for the following features: Extra info, mouse scale fix in pause menu, colored glass shards, radio reset fix, off route infinite loading, loading screen text speed, CD spinner speed, cop blips on minimap and several limits in `limits.ixx`. Thanks to [Kev7cks](https://github.com/Kev7cks) for providing the fixes ([#6](https://github.com/gillian-guide/GTAIV.EFLC.FusionFix-GFWL/pull/6), [#7](https://github.com/gillian-guide/GTAIV.EFLC.FusionFix-GFWL/pull/7).
 - Change the default option of `SkipMenu` to 0 to be able to load into DLC's first.
 - Change the default option of `RecoilFix` to 0 to avoid being as disadvantage to other players in the multiplayer.
 - Enable Windowed by default, which also enables Borderless and No Block on Focus Loss.
@@ -31,7 +31,7 @@ Keep in mind that you still want additional mods to be used for a pleasant GFWL 
 You can visit the [Grand Theft Auto RevIVal Discord Server](https://discord.gg/gtrf) for more information about GFWL multiplayer and people to play with (this patch was also made for these guys). You can also use [HappinessMP](https://happinessmp.net/) to play online on Complete Edition (doesn't allow any mods including FusionFix, however).
 
 ## Installing the GFWL Patch
-### Since v3.4, you can just download the fork alone and extract it. ZPatch option modifications stil apply, however.
+### Since v3.4, you can just download the fork alone and extract it. ZPatch option modifications stil apply, however. Instructions are for older versions.
 Install the [official release](https://github.com/ThirteenAG/GTAIV.EFLC.FusionFix/releases/latest) first, move the files out of the `plugins` folder into the root one, then apply [this patch](https://github.com/gillian-guide/GTAIV.EFLC.FusionFix-GFWL/releases/latest) on top of it.
 
 If using ZolikaPatch, also disable following options in `ZolikaPatch.ini` or use the [Setup Utility](https://github.com/gillian-guide/GTAIVSetupUtilityWPF):
@@ -68,8 +68,6 @@ If using ZolikaPatch, also disable following options in `ZolikaPatch.ini` or use
 ## Compiling FusionFix + GFWL Patch manually
 
 [![Actions Status: Release](https://github.com/gillian-guide/GTAIV.EFLC.FusionFix-GFWL/actions/workflows/msvc_x86.yml/badge.svg)](https://github.com/gillian-guide/GTAIV.EFLC.FusionFix-GFWL/actions)
-
-I include the rest of the original repository for the purposes of compiling the mod manually (including the patch) if you wish to do so.
 
 1. Clone this fork recursively (`git clone https://github.com/gillian-guide/GTAIV.EFLC.FusionFix-GFWL.git --recursive`).
 2. Open `premake5.bat` to generate a compileable Visual Studio project.
