@@ -269,7 +269,7 @@ public:
                {
              auto pattern = hook::pattern("E8 ? ? ? ? 83 C4 0C 89 3C B5 ? ? ? ? 83 C6 01");
                    hbsub_8036A0.fun = injector::MakeCALL(pattern.get_first(0), sub_8036A0).get();
-
+               }
             pattern = find_pattern("83 EC 28 83 3D ? ? ? ? ? 56 8B F1", "83 EC 28 B8 ? ? ? ? 39 05 ? ? ? ? 56 8B F1");
             if (!pattern.empty())
             {
